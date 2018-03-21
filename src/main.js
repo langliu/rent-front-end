@@ -7,8 +7,8 @@ import App from './App.vue';
 import router from './router';
 
 Vue.config.productionTip = false;
-Vue.prototype.http = axios.create({
-  baseURL: '',
+Vue.prototype.axios = axios.create({
+  baseURL: 'http://localhost:8888',
   timeout: 1000,
   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   transformRequest: [data => Qs.stringify(data)],
