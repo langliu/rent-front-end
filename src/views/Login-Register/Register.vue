@@ -198,7 +198,10 @@
 
   .register {
     height: 100vh;
+    background: url("../../assets/images/jonny-caspari-483355-unsplash.jpg") no-repeat;
+    background-size: 100% 100%;
     .register-main {
+      background-color: white;
       box-shadow: 0 0 10px 2px #8a8989;
     }
   }

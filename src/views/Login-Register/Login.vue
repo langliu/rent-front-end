@@ -13,7 +13,7 @@
         <el-form-item label="确认密码" prop="password">
           <el-input type="password" v-model="form.password" class="login-input" auto-complete="off"/>
         </el-form-item>
-        <el-form-item label="验证码" prop="verify" :error="error">
+        <el-form-item label="验证码" prop="verify">
           <el-input v-model="form.verify" class="login-verify"/>
           <img :src="verifySrc" class="verify-img" @click="getVerify">
         </el-form-item>
@@ -144,8 +144,11 @@
 
 <style lang="less" scoped>
   .login {
+    background: url("../../assets/images/sylwia-pietruszka-218324-unsplash.jpg") no-repeat;
+    background-size: 100% 100%;
     height: 100vh;
     .login-main {
+      background-color: white;
       box-shadow: 0 0 10px 2px #8a8989;
       .login_title {
         background-color: rgba(33, 33, 33, .88);
