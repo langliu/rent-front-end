@@ -101,6 +101,9 @@
           .then(response => {
             // 用户登录成功后跳转到网站首页
             if (response.data.success) {
+              sessionStorage.setItem('username', response.data.result.username);
+              sessionStorage.setItem('avatar', response.data.result.avatar);
+              sessionStorage.setItem('token', response.data.result['token']);
               this.$router.push('/');
             } else {
               this.$message.error(response.data['message']);

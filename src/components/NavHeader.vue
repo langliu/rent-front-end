@@ -21,26 +21,49 @@
       </el-submenu>
     </el-submenu>
     <el-menu-item index="3" disabled>消息中心</el-menu-item>
-    <el-menu-item index="4" class="login"  @click="goToLogin" >
-      <img src="../assets/logo.png" class="avatar">
+    <el-submenu index="4" class="login" v-if="username">
+      <template slot="title">
+        <img :src="avatar" class="avatar">
+        <span>{{username}}</span>
+      </template>
+      <el-menu-item index="4-1">个人中心</el-menu-item>
+      <el-menu-item index="4-2" @click="logout">退出登录</el-menu-item>
+    </el-submenu>
+    <el-menu-item index="4" class="login" @click="goToLogin" v-else>
       <span>登录</span>
     </el-menu-item>
-    <!--<div class="login">-->
-    <!--<img src="../assets/logo.png" class="avatar">-->
-    <!--<span @click="goToLogin">登录</span>-->
-    <!--</div>-->
   </el-menu>
 </template>
 
 <script>
   export default {
     name: 'navHeader',
+    data() {
+      return {
+        username: sessionStorage.getItem('username'),
+        avatar: sessionStorage.getItem('avatar'),
+      };
+    },
     methods: {
       handleSelect() {
-
       },
       goToLogin() {
         this.$router.push('/login');
+      },
+      /**
+       * 退出登录
+       */
+      logout() {
+        this.axios
+          .get(`/user/logout/${sessionStorage.getItem('token')}`)
+          .then(response => {
+            if (response.data['success']) {
+              sessionStorage.clear();
+            } else {
+              this.$message.error('退出失败');
+            }
+          })
+          .catch(error => this.$message.error(error));
       },
     },
   };
