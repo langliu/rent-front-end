@@ -3,7 +3,6 @@
       default-active="3"
       class="el-menu-demo"
       mode="horizontal"
-      @select="handleSelect"
       background-color="#545c64"
       text-color="#fff"
       active-text-color="#ffd04b">
@@ -20,16 +19,17 @@
         <el-menu-item index="2-4-3">选项3</el-menu-item>
       </el-submenu>
     </el-submenu>
-    <el-menu-item index="3" disabled>消息中心</el-menu-item>
+    <el-menu-item index="3" @click="goToPage('/postRentalInformation')">租赁发布</el-menu-item>
     <el-submenu index="4" class="login" v-if="username">
       <template slot="title">
         <img :src="avatar" class="avatar">
         <span>{{username}}</span>
       </template>
-      <el-menu-item index="4-1">个人中心</el-menu-item>
+      <el-menu-item index="4-1" @click="goToPage('/user')">个人中心</el-menu-item>
+      <el-menu-item index="4-1" @click="goToPage('/user/changePassword')">修改密码</el-menu-item>
       <el-menu-item index="4-2" @click="logout">退出登录</el-menu-item>
     </el-submenu>
-    <el-menu-item index="4" class="login" @click="goToLogin" v-else>
+    <el-menu-item index="4" class="login" @click="goToPage('/login')" v-else>
       <span>登录</span>
     </el-menu-item>
   </el-menu>
@@ -45,10 +45,12 @@
       };
     },
     methods: {
-      handleSelect() {
-      },
-      goToLogin() {
-        this.$router.push('/login');
+      /**
+       * 页面跳转
+       * @param {string} path 页面路径
+       */
+      goToPage(path) {
+        this.$router.push(path);
       },
       /**
        * 退出登录
@@ -59,6 +61,7 @@
           .then(response => {
             if (response.data['success']) {
               sessionStorage.clear();
+              this.username = '';
             } else {
               this.$message.error('退出失败');
             }
