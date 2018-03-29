@@ -13,9 +13,16 @@ Vue.use(Router);
 export default new Router({
   routes: [
     {
-      path: '/',
+      path: '/index',
       name: 'home',
       component: Home,
+      children:[
+        {
+          path: 'postRentalInformation',
+          name: 'postRentalInformation',
+          component: PostRentalInformation,
+        }
+      ]
     },
     {
       path: '/about',
@@ -42,10 +49,10 @@ export default new Router({
       name: 'changePassword',
       component: ChangePassword,
     },
-    {
-      path: '/postRentalInformation',
-      name: 'postRentalInformation',
-      component: PostRentalInformation,
-    },
+    // {
+    //   path: '/index/postRentalInformation',
+    //   name: 'postRentalInformation',
+    //   component: PostRentalInformation,
+    // },
   ],
 });

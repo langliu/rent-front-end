@@ -19,7 +19,7 @@
         <el-menu-item index="2-4-3">选项3</el-menu-item>
       </el-submenu>
     </el-submenu>
-    <el-menu-item index="3" @click="goToPage('/postRentalInformation')">租赁发布</el-menu-item>
+    <el-menu-item index="3" @click="goToPage('/index/postRentalInformation')">租赁发布</el-menu-item>
     <el-submenu index="4" class="login" v-if="username">
       <template slot="title">
         <img :src="avatar" class="avatar">
