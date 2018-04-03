@@ -104,7 +104,11 @@
               sessionStorage.setItem('username', response.data.result.username);
               sessionStorage.setItem('avatar', response.data.result.avatar);
               sessionStorage.setItem('token', response.data.result['token']);
-              this.$router.push('/index');
+              if (response.data.result.type === 1) {
+                this.$router.push('/admin');
+              } else {
+                this.$router.push('/index/index');
+              }
             } else {
               this.$message.error(response.data['message']);
             }

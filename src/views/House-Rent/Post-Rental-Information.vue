@@ -6,18 +6,20 @@
           <h2>租赁发布</h2>
         </el-col>
       </el-row>
-      <el-form ref="form" v-model="form" label-width="100px">
-        <el-form-item label="出租类型">
+      <el-form ref="form" v-model="form" :rules="rules" label-width="100px">
+        <el-form-item label="出租类型" prop="type">
           <el-radio-group v-model="form.type">
             <el-radio label="0">整租</el-radio>
             <el-radio label="1">合租</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="小区名称">
+        <el-form-item label="小区名称" prop="houseName">
           <el-input v-model="form.houseName"></el-input>
         </el-form-item>
-        <el-form-item label="房屋面积">
-          <el-input v-model="form.houseArea"></el-input>
+        <el-form-item label="房屋面积" prop="houseArea">
+          <el-input v-model="form.houseArea">
+            <template slot="append">平方米</template>
+          </el-input>
         </el-form-item>
         <el-form-item label="房屋室数量">
           <el-input-number v-model="form.roomNum" :min="0" :max="20"></el-input-number>
@@ -34,7 +36,7 @@
         <el-form-item label="总楼层">
           <el-input-number v-model="form.floorTotal" :min="0" :max="200"></el-input-number>
         </el-form-item>
-        <el-form-item label="地区">
+        <el-form-item label="地区" >
           <el-select v-model="form.province" placeholder="省" @change="getCity($event)">
             <el-option v-for="item in provinces"
                        :key="item.regionId"
@@ -89,7 +91,7 @@
               :multiple="true"
               list-type="picture">
             <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb，图片最多3张</div>
           </el-upload>
         </el-form-item>
         <el-form-item>
@@ -128,6 +130,32 @@
           image2: '',
           image3: '',
           description: '', // 描述
+        },
+        rules: {
+          type: [
+            {
+              required: true,
+              message: '请选择出租方式',
+              trigger: 'change',
+            },
+          ],
+          houseName: [
+            {
+              required: true,
+              message: '请输入小区名称',
+              trigger: 'blur',
+            },
+          ],
+          houseArea: [
+            {
+              required: true,
+              message: '请填写房屋面积',
+              trigger: 'blur',
+            },
+          ],
+          region: [
+            { required: true, message: '请选择活动区域', trigger: 'change' }
+          ],
         },
         provinces: [], // 省
         city: [], // 市

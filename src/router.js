@@ -7,6 +7,10 @@ import Register from './views/Login-Register/Register';
 import PersonalCenter from './views/User/Personal-Center';
 import ChangePassword from './views/User/Change-Password';
 import PostRentalInformation from './views/House-Rent/Post-Rental-Information';
+import Index from './views/House-Rent/Index';
+import Admin from './views/Admin/Admin';
+import UserManagement from './views/Admin/User-Management';
+import LeaseManagement from './views/Admin/Lease-Management';
 
 Vue.use(Router);
 
@@ -16,13 +20,18 @@ export default new Router({
       path: '/index',
       name: 'home',
       component: Home,
-      children:[
+      children: [
         {
           path: 'postRentalInformation',
           name: 'postRentalInformation',
           component: PostRentalInformation,
-        }
-      ]
+        },
+        {
+          path: 'index',
+          name: 'index',
+          component: Index,
+        },
+      ],
     },
     {
       path: '/about',
@@ -49,10 +58,22 @@ export default new Router({
       name: 'changePassword',
       component: ChangePassword,
     },
-    // {
-    //   path: '/index/postRentalInformation',
-    //   name: 'postRentalInformation',
-    //   component: PostRentalInformation,
-    // },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: Admin,
+      children: [
+        {
+          path: 'users',
+          name: 'userManagement',
+          component: UserManagement,
+        },
+        {
+          path: 'lease',
+          name: 'leaseManagement',
+          component: LeaseManagement,
+        },
+      ],
+    },
   ],
 });
