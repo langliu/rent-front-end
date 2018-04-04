@@ -1,6 +1,6 @@
 <template>
   <el-table :data="users" border height="88vh">
-    <el-table-column label="头像">
+    <el-table-column label="头像" width="70">
       <template slot-scope="scope">
         <img :src="scope.row.avatar" class="avatar">
       </template>
@@ -23,6 +23,14 @@
       <template slot-scope="scope">{{scope.row.updateTime}}</template>
     </el-table-column>
     <el-table-column prop="address" label="地址"></el-table-column>
+    <el-table-column label="拉黑用户" fixed="right">
+      <template slot-scope="scope">
+        <el-button size="mini" type="danger" v-if="scope.row.status===0" @click="userDisable(scope.row.id)">拉黑
+        </el-button>
+        <el-button size="mini" v-else @click="userEnable(scope.row.id)">解除拉黑
+        </el-button>
+      </template>
+    </el-table-column>
   </el-table>
 </template>
 
@@ -67,6 +75,44 @@
               this.users = response.data.result['content'];
             }
           });
+      },
+      /**
+       * 拉黑用户
+       * @param {string} userId 用户id
+       */
+      userDisable(userId) {
+        this.axios
+          .post('/user/admin/disable', {
+            userId: userId,
+            token: sessionStorage.getItem('token'),
+          })
+          .then(response => {
+            if (response.data.success) {
+              this.getUserInfo();
+            } else {
+              this.$message.error(response.data.message);
+            }
+          })
+          .catch(error => this.$message.error(error));
+      },
+      /**
+       * 拉黑用户
+       * @param {string} userId 用户id
+       */
+      userEnable(userId) {
+        this.axios
+          .post('/user/admin/enable', {
+            userId: userId,
+            token: sessionStorage.getItem('token'),
+          })
+          .then(response => {
+            if (response.data.success) {
+              this.getUserInfo();
+            } else {
+              this.$message.error(response.data.message);
+            }
+          })
+          .catch(error => this.$message.error(error));
       },
     },
     filters: {

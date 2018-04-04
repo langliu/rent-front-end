@@ -11,7 +11,7 @@
             </el-menu-item-group>
           </el-submenu>
           <el-submenu index="2">
-            <template slot="title"><i class="el-icon-message"></i>租赁管理</template>
+            <template slot="title"><i class="el-icon-tickets"></i>租赁管理</template>
             <el-menu-item-group>
               <el-menu-item index="2-1" @click="goToPage('/admin/lease')">
                 租赁管理
