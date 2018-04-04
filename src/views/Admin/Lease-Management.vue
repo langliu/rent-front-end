@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table :data="houses" border height="70vh" @selection-change="handleSelectionChange">
+    <el-table :data="houses" border @selection-change="handleSelectionChange">
       <el-table-column
           type="selection"
           width="55">
@@ -84,6 +84,18 @@
     <div style="margin-top: 20px">
       <el-button :disabled="multipleSelection.length===0" @click="deleteSelect()">删除所选</el-button>
     </div>
+    <div class="pagination">
+      <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="1"
+          :page-sizes="[20, 50, 100]"
+          :page-size="20"
+          background
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="totalElements">
+      </el-pagination>
+    </div>
   </div>
 </template>
 
@@ -128,6 +140,11 @@
         dialogVisible: false,
         reason: '',
         multipleSelection: [],
+        totalElements: 0,
+        params: {
+          pageSize: 20,
+          pageNumber: 1,
+        },
       };
     },
     mounted() {
@@ -138,10 +155,13 @@
     methods: {
       getUserInfo() {
         this.axios
-          .get('/rent/getByPage')
+          .get('/rent/getByPage', {
+            params: this.params,
+          })
           .then(response => {
             if (response.data.success) {
               this.houses = response.data.result['content'];
+              this.totalElements = response.data.result['totalElements'];
             }
           });
       },
@@ -233,6 +253,22 @@
             this.$message.error(error);
           });
       },
+      /**
+       * 修改分页大小
+       * @param {number} val 分页大小
+       */
+      handleSizeChange(val) {
+        this.params.pageSize = val;
+        this.getUserInfo();
+      },
+      /**
+       * 分页跳转
+       * @param {number} val 要跳转的页面
+       */
+      handleCurrentChange(val) {
+        this.params.pageNumber = val;
+        this.getUserInfo();
+      },
     },
     filters: {
       type(value) {
@@ -264,5 +300,12 @@
   .avatar {
     height: 50px;
     width: 80px;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5vh;
+    margin-top: 5vh;
   }
 </style>

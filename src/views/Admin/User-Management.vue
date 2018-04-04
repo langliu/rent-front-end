@@ -1,37 +1,51 @@
 <template>
-  <el-table :data="users" border height="88vh">
-    <el-table-column label="头像" width="70">
-      <template slot-scope="scope">
-        <img :src="scope.row.avatar" class="avatar">
-      </template>
-    </el-table-column>
-    <el-table-column prop="id" label="ID" width="100">
-    </el-table-column>
-    <el-table-column prop="username" label="用户名" width="120">
-    </el-table-column>
-    <el-table-column prop="email" label="Email">
-    </el-table-column>
-    <el-table-column prop="telPhone" label="电话">
-    </el-table-column>
-    <el-table-column label="性别">
-      <template slot-scope="scope">{{scope.row.sex | sex}}</template>
-    </el-table-column>
-    <el-table-column label="注册时间">
-      <template slot-scope="scope">{{scope.row.createTime }}</template>
-    </el-table-column>
-    <el-table-column label="升级时间">
-      <template slot-scope="scope">{{scope.row.updateTime}}</template>
-    </el-table-column>
-    <el-table-column prop="address" label="地址"></el-table-column>
-    <el-table-column label="拉黑用户" fixed="right">
-      <template slot-scope="scope">
-        <el-button size="mini" type="danger" v-if="scope.row.status===0" @click="userDisable(scope.row.id)">拉黑
-        </el-button>
-        <el-button size="mini" v-else @click="userEnable(scope.row.id)">解除拉黑
-        </el-button>
-      </template>
-    </el-table-column>
-  </el-table>
+  <div>
+    <el-table :data="users" border>
+      <el-table-column label="头像" width="70">
+        <template slot-scope="scope">
+          <img :src="scope.row.avatar" class="avatar">
+        </template>
+      </el-table-column>
+      <el-table-column prop="id" label="ID" width="100">
+      </el-table-column>
+      <el-table-column prop="username" label="用户名" width="120">
+      </el-table-column>
+      <el-table-column prop="email" label="Email">
+      </el-table-column>
+      <el-table-column prop="telPhone" label="电话">
+      </el-table-column>
+      <el-table-column label="性别">
+        <template slot-scope="scope">{{scope.row.sex | sex}}</template>
+      </el-table-column>
+      <el-table-column label="注册时间">
+        <template slot-scope="scope">{{scope.row.createTime }}</template>
+      </el-table-column>
+      <el-table-column label="升级时间">
+        <template slot-scope="scope">{{scope.row.updateTime}}</template>
+      </el-table-column>
+      <el-table-column prop="address" label="地址"></el-table-column>
+      <el-table-column label="拉黑用户" fixed="right">
+        <template slot-scope="scope">
+          <el-button size="mini" type="danger" v-if="scope.row.status===0" @click="userDisable(scope.row.id)">拉黑
+          </el-button>
+          <el-button size="mini" v-else @click="userEnable(scope.row.id)">解除拉黑
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="pagination">
+      <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="1"
+          :page-sizes="[20, 50, 100]"
+          :page-size="20"
+          background
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="totalElements">
+      </el-pagination>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -59,6 +73,11 @@
           'token': null,
           'newPass': null,
         }],
+        params: {
+          pageSize: 20,
+          pageNumber: 1,
+        },
+        totalElements: 0,
       };
     },
     mounted() {
@@ -69,10 +88,13 @@
     methods: {
       getUserInfo() {
         this.axios
-          .get('/user/getByPage')
+          .get('/user/getByPage', {
+            params: this.params,
+          })
           .then(response => {
             if (response.data.success) {
               this.users = response.data.result['content'];
+              this.totalElements = response.data.result['totalElements'];
             }
           });
       },
@@ -114,6 +136,22 @@
           })
           .catch(error => this.$message.error(error));
       },
+      /**
+       * 修改分页大小
+       * @param {number} val 分页大小
+       */
+      handleSizeChange(val) {
+        this.params.pageSize = val;
+        this.getUserInfo();
+      },
+      /**
+       * 分页跳转
+       * @param {number} val 要跳转的页面
+       */
+      handleCurrentChange(val) {
+        this.params.pageNumber = val;
+        this.getUserInfo();
+      },
     },
     filters: {
       sex(value) {
@@ -133,5 +171,12 @@
   .avatar {
     height: 50px;
     width: 50px;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5vh;
+    margin-top: 5vh;
   }
 </style>

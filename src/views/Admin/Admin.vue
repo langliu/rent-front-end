@@ -1,6 +1,10 @@
 <template>
   <el-container>
-    <el-header height="10vh">后台管理系统</el-header>
+    <el-header height="10vh">
+      <div class="header">
+        后台管理系统
+      </div>
+    </el-header>
     <el-container>
       <el-aside width="200px">
         <el-menu>
@@ -35,11 +39,11 @@
         this.$router.push('/admin/users');
       });
     },
-    methods:{
-      goToPage(url){
-        this.$router.push(url)
-      }
-    }
+    methods: {
+      goToPage(url) {
+        this.$router.push(url);
+      },
+    },
   };
 </script>
 
@@ -47,5 +51,28 @@
   .el-main {
     padding-bottom: 0;
     padding-top: 0;
+    margin-top: 12vh;
+  }
+
+  .el-header {
+    background-color: #4c4c4c;
+    left: 0;
+    margin-bottom: 2vh;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    z-index: 10;
+  }
+  .el-aside{
+    margin-top: 12vh;
+  }
+
+  .header {
+    align-items: center;
+    color: white;
+    display: flex;
+    font-size: 2vw;
+    font-weight: 700;
+    height: 10vh;
   }
 </style>
