@@ -12,46 +12,40 @@
       <el-row class="choose">
         <el-col :span="2" class="title">租金：</el-col>
         <el-col :span="22" class="items">
-          <span @click="setPrice(null,null)">不限</span>
-          <span @click="setPrice(null,500)">500元以下</span>
-          <span @click="setPrice(500,1000)">500-1000元</span>
-          <span @click="setPrice(1000,2000)">1000-2000元</span>
-          <span @click="setPrice(2000,3000)">2000-3000元</span>
-          <span @click="setPrice(3000,5000)">3000-5000元</span>
-          <span @click="setPrice(5000,8000)">5000-8000元</span>
-          <span @click="setPrice(8000,null)">8000元以上</span>
+          <span @click="setPrice(null,null)"
+                :class="{active: params.priceGt===null && params.priceLe===null}">不限</span>
+          <span @click="setPrice(null,500)"
+                :class="{active: params.priceGt===null && params.priceLe===500}">500元以下</span>
+          <span @click="setPrice(500,1000)"
+                :class="{active: params.priceGt===500 && params.priceLe===1000}">500-1000元</span>
+          <span @click="setPrice(1000,2000)"
+                :class="{active: params.priceGt===1000&& params.priceLe===2000}">1000-2000元</span>
+          <span @click="setPrice(2000,3000)"
+                :class="{active: params.priceGt===2000&& params.priceLe===3000}">2000-3000元</span>
+          <span @click="setPrice(3000,5000)"
+                :class="{active: params.priceGt===3000&& params.priceLe===5000}">3000-5000元</span>
+          <span @click="setPrice(5000,8000)"
+                :class="{active: params.priceGt===5000&& params.priceLe===8000}">5000-8000元</span>
+          <span @click="setPrice(8000,null)"
+                :class="{active: params.priceGt===8000&& params.priceLe===null}">8000元以上</span>
         </el-col>
       </el-row>
-      <!--<el-row class="choose">-->
-      <!--<el-col :span="2" class="title">面积：</el-col>-->
-      <!--<el-col :span="22" class="items">-->
-      <!--<span>不限</span>-->
-      <!--<span>50平以下</span>-->
-      <!--<span>50-70平</span>-->
-      <!--<span>70-90平</span>-->
-      <!--<span>90-110平</span>-->
-      <!--<span>110-130平</span>-->
-      <!--<span>130-150平</span>-->
-      <!--<span>150-200平</span>-->
-      <!--<span>200平以上</span>-->
-      <!--</el-col>-->
-      <!--</el-row>-->
       <el-row class="choose">
         <el-col :span="2" class="title">房型：</el-col>
         <el-col :span="22" class="items">
-          <span @click="setRoomNumber(null)">不限</span>
-          <span @click="setRoomNumber(1)">一室</span>
-          <span @click="setRoomNumber(2)">两室</span>
-          <span @click="setRoomNumber(3)">三室</span>
-          <span @click="setRoomNumber(4)">四室</span>
+          <span @click="setRoomNumber(null)" :class="{active:params.roomNum===null}">不限</span>
+          <span @click="setRoomNumber(1)" :class="{active:params.roomNum===1}">一室</span>
+          <span @click="setRoomNumber(2)" :class="{active:params.roomNum===2}">两室</span>
+          <span @click="setRoomNumber(3)" :class="{active:params.roomNum===3}">三室</span>
+          <span @click="setRoomNumber(4)" :class="{active:params.roomNum===4}">四室</span>
         </el-col>
       </el-row>
       <el-row class="choose">
         <el-col :span="2" class="title">方式：</el-col>
         <el-col :span="22" class="items">
-          <span @click="setType()">不限</span>
-          <span @click="setType(0)">整租</span>
-          <span @click="setType(1)">合租</span>
+          <span @click="setType()" :class="{active:params.type===null}">不限</span>
+          <span @click="setType(0)" :class="{active:params.type===0}">整租</span>
+          <span @click="setType(1)" :class="{active:params.type===1}">合租</span>
         </el-col>
       </el-row>
     </el-col>
@@ -233,10 +227,16 @@
         color: #39ac6a;
         text-decoration: underline;
       }
+      cursor: pointer;
       display: inline-block;
       font-size: 1vw;
       line-height: 30px;
       margin-right: 1vw;
     }
+  }
+
+  .active {
+    color: #39ac6a;
+    font-weight: bold;
   }
 </style>
