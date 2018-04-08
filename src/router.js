@@ -11,6 +11,7 @@ import Index from './views/House-Rent/Index';
 import Admin from './views/Admin/Admin';
 import UserManagement from './views/Admin/User-Management';
 import LeaseManagement from './views/Admin/Lease-Management';
+import HouseInformation from './views/House-Rent/House-Information';
 
 Vue.use(Router);
 
@@ -30,6 +31,10 @@ export default new Router({
           path: 'index',
           name: 'index',
           component: Index,
+        },
+        {
+          path: 'detail/:id',
+          component: HouseInformation,
         },
       ],
     },
@@ -74,6 +79,10 @@ export default new Router({
           component: LeaseManagement,
         },
       ],
+    },
+    {
+      path: '/',
+      redirect: '/login',
     },
   ],
 });

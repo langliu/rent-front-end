@@ -6,7 +6,7 @@
           <h2>租赁发布</h2>
         </el-col>
       </el-row>
-      <el-form ref="form" v-model="form" :rules="rules" label-width="100px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="出租类型" prop="type">
           <el-radio-group v-model="form.type">
             <el-radio label="0">整租</el-radio>
@@ -36,7 +36,7 @@
         <el-form-item label="总楼层">
           <el-input-number v-model="form.floorTotal" :min="0" :max="200"></el-input-number>
         </el-form-item>
-        <el-form-item label="地区" >
+        <el-form-item label="地区">
           <el-select v-model="form.province" placeholder="省" @change="getCity($event)">
             <el-option v-for="item in provinces"
                        :key="item.regionId"
@@ -59,22 +59,22 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="详细地址">
+        <el-form-item label="详细地址" prop="address">
           <el-input v-model="form.address"></el-input>
         </el-form-item>
-        <el-form-item label="租金">
+        <el-form-item label="租金" prop="price">
           <el-input v-model="form.price"></el-input>
         </el-form-item>
-        <el-form-item label="联系方式">
+        <el-form-item label="联系方式" prop="mobile">
           <el-input v-model="form.mobile"></el-input>
         </el-form-item>
         <el-form-item label="QQ">
           <el-input v-model="form.qq"></el-input>
         </el-form-item>
-        <el-form-item label="联系人">
+        <el-form-item label="联系人" prop="contact">
           <el-input v-model="form.contact"></el-input>
         </el-form-item>
-        <el-form-item label="标题">
+        <el-form-item label="标题" prop="title">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
         <el-form-item label="描述">
@@ -95,7 +95,7 @@
           </el-upload>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="postData">确认发布</el-button>
+          <el-button type="primary" @click="formValidation">确认发布</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -106,6 +106,21 @@
   export default {
     name: 'Post-Rental-Information',
     data() {
+      const number = (rule, value, callback) => {
+        if (!Number(value)) {
+          callback(new Error('请输入数字'));
+        } else {
+          console.log(value);
+          callback();
+        }
+      };
+      const telPhone = (rule, value, callbacks) => {
+        if (!this.telPhone(value)) {
+          callbacks(new Error('请输入正确的联系方式'));
+        } else {
+          callbacks();
+        }
+      };
       return {
         form: {
           token: sessionStorage.getItem('token'),
@@ -152,9 +167,60 @@
               message: '请填写房屋面积',
               trigger: 'blur',
             },
+            {
+              validator: number,
+              trigger: 'blur',
+            },
           ],
           region: [
-            { required: true, message: '请选择活动区域', trigger: 'change' }
+            {
+              required: true,
+              message: '请选择活动区域',
+              trigger: 'change',
+            },
+          ],
+          address: [
+            {
+              required: true,
+              message: '请填写详细位置',
+              trigger: 'blur',
+            },
+          ],
+          price: [
+            {
+              required: true,
+              message: '请选择租金',
+              trigger: 'change',
+            },
+            {
+              validator: number,
+              trigger: 'blur',
+            },
+          ],
+          mobile: [
+            {
+              required: true,
+              message: '请填写联系方式',
+              trigger: 'blur',
+            },
+            {
+              validator: telPhone,
+              trigger: 'blur',
+            },
+          ],
+          contact: [
+            {
+              required: true,
+              message: '请填写联系人名称',
+              trigger: 'blur',
+            },
+          ],
+          title: [
+            {
+              required: true,
+              message: '请输入标题',
+              trigger: 'blur',
+            },
           ],
         },
         provinces: [], // 省
@@ -247,6 +313,24 @@
         console.log(response);
         this.images.push(response.result);
         console.log(fileList);
+      },
+      /**
+       * 电话号码验证
+       * @param {string} telNumber 电话号码
+       */
+      telPhone(telNumber) {
+        const reg = /^1(3[0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|8[0-9]|9[89])\d{8}$/g;
+        return reg.test(telNumber);
+      },
+      formValidation() {
+        this.$refs['form'].validate((valid) => {
+          if (valid) {
+            this.postData();
+          } else {
+            this.$message.error('请检查您的输入');
+            return false;
+          }
+        });
       },
     },
   };

@@ -62,7 +62,7 @@
           <span>好吃的汉堡</span>
           <div class="bottom clearfix">
             <time class="time">{{ item.title }}</time>
-            <el-button type="text" class="button">操作按钮</el-button>
+            <el-button type="text" class="button" @click="goToDetail(item.id)">操作按钮</el-button>
           </div>
         </div>
       </el-card>
@@ -170,6 +170,9 @@
       setType(type = null) {
         this.params.type = type;
         this.getData();
+      },
+      goToDetail(id) {
+        this.$router.push(`/index/detail/${id}`);
       },
     },
   };
