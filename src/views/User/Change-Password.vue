@@ -29,7 +29,7 @@
         rules: {
           password: [
             {
-              require: true,
+              required: true,
               message: '请填写密码',
               trigger: 'blur',
             },
@@ -52,7 +52,7 @@
           .post('/user/modifyPass', this.form)
           .then(response => {
             if (response.data.success) {
-              this.$router.push('/');
+              this.$router.push('/index/index');
             } else {
               this.$message.error(response.data.message);
             }

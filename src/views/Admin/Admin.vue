@@ -56,7 +56,7 @@
             if (response.data['success']) {
               sessionStorage.clear();
               this.username = '';
-              this.goToPage('/login');
+              this.goToPage('/index/index');
             } else {
               this.$message.error('退出失败');
             }

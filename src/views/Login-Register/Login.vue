@@ -10,7 +10,7 @@
         <el-form-item label="用户名" prop="username">
           <el-input type="text" v-model="form.username" class="login-input" auto-complete="off"/>
         </el-form-item>
-        <el-form-item label="确认密码" prop="password">
+        <el-form-item label="密码" prop="password">
           <el-input type="password" v-model="form.password" class="login-input" auto-complete="off"/>
         </el-form-item>
         <el-form-item label="验证码" prop="verify">

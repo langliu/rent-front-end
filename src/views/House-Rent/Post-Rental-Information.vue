@@ -77,21 +77,21 @@
         <el-form-item label="标题" prop="title">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
-        <el-form-item label="描述">
-          <el-input type="textarea" v-model="form.description"></el-input>
+        <el-form-item label="描述" prop="description">
+          <el-input type="textarea" v-model="form.description" :rows="5" placeholder="请输入租赁信息描述"></el-input>
         </el-form-item>
-        <el-form-item label="File">
+        <el-form-item label="照片">
           <el-upload
               class="upload-demo"
               action="http://localhost:8888/image/upload"
               :on-success="handleSuccess"
               :before-upload="handleUpload"
               :file-list="fileList"
-              :limit="3"
+              :limit="5"
               :multiple="true"
               list-type="picture">
             <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb，图片最多3张</div>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过1M，图片最多5张</div>
           </el-upload>
         </el-form-item>
         <el-form-item>
@@ -110,7 +110,6 @@
         if (!Number(value)) {
           callback(new Error('请输入数字'));
         } else {
-          console.log(value);
           callback();
         }
       };
@@ -222,6 +221,13 @@
               trigger: 'blur',
             },
           ],
+          description: [
+            {
+              required: true,
+              message: '请输入租赁信息描述',
+              trigger: 'blur',
+            },
+          ],
         },
         provinces: [], // 省
         city: [], // 市
@@ -243,7 +249,6 @@
         this.axios
           .get('/region/getProvince')
           .then(response => {
-            console.log(response);
             if (response.data.success) {
               this.provinces = response.data.result;
             }
@@ -278,8 +283,13 @@
             this.county = response.data.result;
           });
       },
+      /**
+       * 提交租赁信息数据
+       **/
       postData() {
+        // 转换租赁信息格式为number类型
         this.form.type = Number.parseInt(this.form.type);
+
         if (this.images.length === 1) {
           this.form.image1 = this.images[0];
         } else if (this.images.length === 2) {
@@ -293,10 +303,19 @@
         this.axios
           .post('/rent/post', this.form)
           .then(response => {
-            console.log(response);
+            // 表单提交成功后跳转到首页
+            if (response.data.success) {
+              this.$router.push('/index/index');
+            } else {
+              this.$message.error(response.data.message);
+            }
           })
           .catch(error => this.$message.error(error));
       },
+      /**
+       * 上传前的照片格式和文件大小检查
+       * @param {*} file 文件
+       **/
       handleUpload(file) {
         const isJPG = file.type === 'image/jpeg';
         const isLt2M = file.size / 1024 / 1024 < 2;
@@ -310,9 +329,7 @@
         return isJPG && isLt2M;
       },
       handleSuccess(response, file, fileList) {
-        console.log(response);
         this.images.push(response.result);
-        console.log(fileList);
       },
       /**
        * 电话号码验证

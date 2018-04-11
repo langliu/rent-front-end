@@ -60,7 +60,7 @@
           </el-button>
           <el-button type="danger" size="mini"
                      v-if="scope.row.status===0"
-                     @click.native.prevent="dialogVisible = true">
+                     @click.native.prevent="dialogVisible = true; rejectId = scope.row.id">
             驳回
           </el-button>
           <el-button type="danger" size="mini" :disabled="true" v-else>
@@ -75,7 +75,7 @@
             <el-input type="textarea" v-model="reason" :rows="4"></el-input>
             <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="rejectPass(scope.row.id, reason)">确 定</el-button>
+            <el-button type="primary" @click="rejectPass(rejectId, reason)">确 定</el-button>
           </span>
           </el-dialog>
         </template>
@@ -145,6 +145,7 @@
           pageSize: 20,
           pageNumber: 1,
         },
+        rejectId:'0', // 驳回Id
       };
     },
     mounted() {
@@ -171,7 +172,7 @@
        */
       rentPass(id) {
         this.axios
-          .post('/rent/post', {
+          .post('/rent/pass', {
             rentId: id,
             token: sessionStorage.getItem('token'),
           })
