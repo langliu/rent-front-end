@@ -4,6 +4,9 @@
       <div class="header">
         后台管理系统
       </div>
+      <div class="logout">
+        <el-button size="mini" @click="logout">退出登录</el-button>
+      </div>
     </el-header>
     <el-container>
       <el-aside width="200px">
@@ -43,6 +46,23 @@
       goToPage(url) {
         this.$router.push(url);
       },
+      /**
+       * 退出登录
+       */
+      logout() {
+        this.axios
+          .get(`/user/logout/${sessionStorage.getItem('token')}`)
+          .then(response => {
+            if (response.data['success']) {
+              sessionStorage.clear();
+              this.username = '';
+              this.goToPage('/login');
+            } else {
+              this.$message.error('退出失败');
+            }
+          })
+          .catch(error => this.$message.error(error));
+      },
     },
   };
 </script>
@@ -62,8 +82,12 @@
     top: 0;
     width: 100vw;
     z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-  .el-aside{
+
+  .el-aside {
     margin-top: 12vh;
   }
 
@@ -74,5 +98,9 @@
     font-size: 2vw;
     font-weight: 700;
     height: 10vh;
+  }
+
+  .logout {
+    margin-right: 15px;
   }
 </style>

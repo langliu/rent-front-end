@@ -50,7 +50,7 @@
       <el-table-column label="发布审核" fixed="right" width="150">
         <template slot-scope="scope">
           <el-button type="primary"
-                     v-if="scope.row.status===0"
+                     v-if="scope.row.status===0||scope.row.status===2"
                      @click.native.prevent="rentPass(scope.row.id)"
                      size="mini">
             通过
@@ -176,10 +176,11 @@
             token: sessionStorage.getItem('token'),
           })
           .then(response => {
+            console.log(response);
             if (response.data.success) {
               this.getUserInfo();
             } else {
-              this.$message.error(response.data.message);
+              // this.$message.error(response.data.message);
             }
           })
           .catch(error => {
