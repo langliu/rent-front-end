@@ -1,5 +1,23 @@
 <template>
   <el-row>
+    <el-col :span="20" :offset="2">
+      <el-row class="carousel">
+        <el-carousel :interval="4000" type="card" height="40vh">
+          <el-carousel-item>
+            <img src="../../assets/images/optimizilla/alexandra-gorn-485551-unsplash-min.jpg" alt=""
+                 class="carousel-img">
+          </el-carousel-item>
+          <el-carousel-item>
+            <img src="../../assets/images/optimizilla/jonny-caspari-483355-unsplash-min.jpg" alt=""
+                 class="carousel-img">
+          </el-carousel-item>
+          <el-carousel-item>
+            <img src="../../assets/images/optimizilla/naomi-hebert-188443-unsplash-min.jpg" alt=""
+                 class="carousel-img">
+          </el-carousel-item>
+        </el-carousel>
+      </el-row>
+    </el-col>
     <el-col :span="20" :offset="2" class="search-condition">
       <el-row class="choose">
         <el-col :span="2" class="title">区域：</el-col>
@@ -111,6 +129,11 @@
           priceGt: null, // 搜索起始价格
           priceLe: null, // 搜索终止价格
         },
+        items: [
+          '../../assets/images/optimizilla/alexandra-gorn-485551-unsplash-min.jpg',
+          '../../assets/images/optimizilla/jonny-caspari-483355-unsplash-min.jpg',
+          'src/assets/images/optimizilla/naomi-hebert-188443-unsplash-min.jpg',
+        ],
       };
     },
     mounted() {
@@ -238,5 +261,14 @@
   .active {
     color: #39ac6a;
     font-weight: bold;
+  }
+
+  .carousel {
+    margin: 5vh 0;
+  }
+
+  .carousel-img {
+    height: 100%;
+    width: 100%;
   }
 </style>
