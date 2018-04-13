@@ -2,20 +2,7 @@
   <el-row>
     <el-col :span="20" :offset="2">
       <el-row class="carousel">
-        <el-carousel :interval="4000" type="card" height="40vh">
-          <el-carousel-item>
-            <img src="../../assets/images/optimizilla/alexandra-gorn-485551-unsplash-min.jpg" alt=""
-                 class="carousel-img">
-          </el-carousel-item>
-          <el-carousel-item>
-            <img src="../../assets/images/optimizilla/jonny-caspari-483355-unsplash-min.jpg" alt=""
-                 class="carousel-img">
-          </el-carousel-item>
-          <el-carousel-item>
-            <img src="../../assets/images/optimizilla/naomi-hebert-188443-unsplash-min.jpg" alt=""
-                 class="carousel-img">
-          </el-carousel-item>
-        </el-carousel>
+        <Carousel></Carousel>
       </el-row>
     </el-col>
     <el-col :span="20" :offset="2" class="search-condition">
@@ -84,8 +71,12 @@
 </template>
 
 <script>
+  import Carousel from '../../components/Carousel';
+
   export default {
     name: 'Index',
+    components: {Carousel},
+    component: Carousel,
     data() {
       return {
         house: [{
@@ -265,10 +256,5 @@
 
   .carousel {
     margin: 5vh 0;
-  }
-
-  .carousel-img {
-    height: 100%;
-    width: 100%;
   }
 </style>
