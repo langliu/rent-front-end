@@ -1,7 +1,10 @@
 <template>
   <el-carousel :interval="4000" type="card" height="40vh">
     <el-carousel-item v-for="item in advert">
-      <img :src="item.picUrl" :alt="item.title" class="carousel-img">
+      <img :src="item.picUrl"
+           :alt="item.title"
+           class="carousel-img"
+           @click="goToPage(item.type,item.relateId,item.redirectUrl)">
     </el-carousel-item>
   </el-carousel>
 </template>
@@ -46,6 +49,20 @@
             }
           })
           .catch(error => this.$message.error(error));
+      },
+      /**
+       * 轮播图页面跳转
+       * @param {number} type 链接类型
+       * @param {number} id 关联id
+       * @param {string} url 关联Url
+       */
+      goToPage(type, id, url) {
+        console.log(type);
+        if (Object.is(type, 0)) {
+          this.$router.push(`/index/detail/${id}`);
+        } else {
+          location.href = url;
+        }
       },
     },
   };

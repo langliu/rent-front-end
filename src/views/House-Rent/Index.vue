@@ -6,6 +6,9 @@
       </el-row>
     </el-col>
     <el-col :span="20" :offset="2" class="search-condition">
+      <el-row class="search-header">
+        <h3>全部租房</h3>
+      </el-row>
       <el-row class="choose">
         <el-col :span="2" class="title">区域：</el-col>
         <el-col :span="22" class="items">
@@ -33,6 +36,10 @@
                 :class="{active: params.priceGt===5000&& params.priceLe===8000}">5000-8000元</span>
           <span @click="setPrice(8000,null)"
                 :class="{active: params.priceGt===8000&& params.priceLe===null}">8000元以上</span>
+          <span>
+            <input title="priceGt" v-model="params.priceGt"/> -
+            <input title="priceGt" v-model="params.priceLe"/> 元
+          </span>
         </el-col>
       </el-row>
       <el-row class="choose">
@@ -43,6 +50,9 @@
           <span @click="setRoomNumber(2)" :class="{active:params.roomNum===2}">两室</span>
           <span @click="setRoomNumber(3)" :class="{active:params.roomNum===3}">三室</span>
           <span @click="setRoomNumber(4)" :class="{active:params.roomNum===4}">四室</span>
+          <span>
+            <input title="roomNum" v-model="params.roomNum"/> 室
+          </span>
         </el-col>
       </el-row>
       <el-row class="choose">
@@ -224,8 +234,27 @@
     clear: both
   }
 
+  .search-header {
+    border-bottom: 2px solid #39ac6a;
+    color: white;
+    h3 {
+      display: inline-block;
+      background: #39ac6a;
+      margin: 0;
+      height: 50px;
+      line-height: 50px;
+      padding: 0 15px;
+    }
+  }
+
   .choose {
     height: 30px;
+    &:first-child {
+      margin-top: 15px;
+    }
+    &:last-child {
+      margin-bottom: 15px;
+    }
   }
 
   .title {
@@ -240,6 +269,9 @@
       &:hover {
         color: #39ac6a;
         text-decoration: underline;
+      }
+      input {
+        width: 40px;
       }
       cursor: pointer;
       display: inline-block;
