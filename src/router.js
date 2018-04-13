@@ -11,6 +11,8 @@ import Index from './views/House-Rent/Index';
 import Admin from './views/Admin/Admin';
 import UserManagement from './views/Admin/User-Management';
 import LeaseManagement from './views/Admin/Lease-Management';
+import AdvertAdd from './views/Admin/Advert-Add';
+import Advert from './views/Admin/Advert';
 import HouseInformation from './views/House-Rent/House-Information';
 
 Vue.use(Router);
@@ -77,6 +79,16 @@ export default new Router({
           path: 'lease',
           name: 'leaseManagement',
           component: LeaseManagement,
+        },
+        {
+          path: 'advertAdd',
+          name: 'advertAdd',
+          component: AdvertAdd,
+        },
+        {
+          path: 'advert',
+          name: 'advert',
+          component: Advert,
         },
       ],
     },

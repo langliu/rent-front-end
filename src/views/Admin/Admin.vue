@@ -10,7 +10,7 @@
     </el-header>
     <el-container>
       <el-aside width="200px">
-        <el-menu>
+        <el-menu unique-opened default-active="1-1">
           <el-submenu index="1">
             <template slot="title"><i class="el-icon-message"></i>用户管理</template>
             <el-menu-item-group>
@@ -22,6 +22,17 @@
             <el-menu-item-group>
               <el-menu-item index="2-1" @click="goToPage('/admin/lease')">
                 租赁管理
+              </el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="3">
+            <template slot="title"><i class="el-icon-picture"></i>轮播管理</template>
+            <el-menu-item-group>
+              <el-menu-item index="3-1" @click="goToPage('/admin/advert')">
+                轮播管理
+              </el-menu-item>
+              <el-menu-item index="3-2" @click="goToPage('/admin/advertAdd')">
+                新增轮播
               </el-menu-item>
             </el-menu-item-group>
           </el-submenu>

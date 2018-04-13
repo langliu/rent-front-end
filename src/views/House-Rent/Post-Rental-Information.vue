@@ -328,7 +328,7 @@
         }
         return isJPG && isLt2M;
       },
-      handleSuccess(response, file, fileList) {
+      handleSuccess(response) {
         this.images.push(response.result);
       },
       /**
