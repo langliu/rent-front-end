@@ -1,5 +1,5 @@
 <template>
-  <el-row>
+  <el-row class="index">
     <el-col :span="20" :offset="2">
       <el-row class="carousel">
         <Carousel></Carousel>
@@ -54,17 +54,10 @@
         </el-col>
       </el-row>
     </el-col>
-    <el-col :span="8" v-for="item in house" :key="item.id" :offset="2">
-      <el-card :body-style="{ padding: '0px' }">
-        <img :src="item.image1" class="image">
-        <div style="padding: 14px;">
-          <span>好吃的汉堡</span>
-          <div class="bottom clearfix">
-            <time class="time">{{ item.title }}</time>
-            <el-button type="text" class="button" @click="goToDetail(item.id)">操作按钮</el-button>
-          </div>
-        </div>
-      </el-card>
+    <el-col :span="20" :offset="2" class="house-list">
+      <div class="house" v-for="item in house" :key="item.id">
+        <HouseCard :house-info="item"></HouseCard>
+      </div>
     </el-col>
   </el-row>
 
@@ -72,11 +65,14 @@
 
 <script>
   import Carousel from '../../components/Carousel';
+  import HouseCard from '../../components/House-Card';
 
   export default {
     name: 'Index',
-    components: {Carousel},
-    component: Carousel,
+    components: {
+      Carousel,
+      HouseCard,
+    },
     data() {
       return {
         house: [{
@@ -187,6 +183,10 @@
 </script>
 
 <style lang="less" scoped>
+  .index {
+    background-color: #f1f1f1;
+  }
+
   .search-condition {
     background-color: white;
     box-shadow: 0 0 8px 2px #e3e1e1;
@@ -256,5 +256,19 @@
 
   .carousel {
     margin: 5vh 0;
+  }
+
+  .house-list {
+    background-color: #ffffff;
+    box-shadow: 0 0 8px 2px #e3e1e1;
+    margin-bottom: 30vh;
+  }
+
+  .house {
+    height: 30vh;
+    border-bottom: 1px dotted #e1e1e1;
+    &:last-child {
+      border: none;
+    }
   }
 </style>
