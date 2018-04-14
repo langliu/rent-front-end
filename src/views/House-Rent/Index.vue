@@ -2,7 +2,7 @@
   <el-row class="index">
     <el-col :span="20" :offset="2">
       <el-row class="carousel">
-        <Carousel></Carousel>
+        <Carousel/>
       </el-row>
     </el-col>
     <el-col :span="20" :offset="2" class="search-condition">
@@ -63,16 +63,35 @@
           <span @click="setType(1)" :class="{active:params.type===1}">合租</span>
         </el-col>
       </el-row>
+      <el-row class="sort">
+        <el-col :span="2" class="title">排序：</el-col>
+        <el-col :span="22">
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              {{sortTitle}}<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>
+                <span @click="sequence('price','desc','价格从高到低')">价格从高到低</span>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <span @click="sequence('price','asc','价格从低到高')">价格从低到高</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </el-col>
+      </el-row>
     </el-col>
     <el-col :span="20" :offset="2" class="key-search">
       <el-row>
         <el-col :span="12">
-          <el-input v-model="params.key"
-                    @clear="getData"
-                    clearable
-                    prefix-icon="el-icon-search"
-                    placeholder="请输入关键字开始找房"
-                    @keyup.enter.native="getData"/>
+          <el-input
+              v-model="params.key"
+              clearable
+              prefix-icon="el-icon-search"
+              placeholder="请输入关键字开始找房"
+              @clear="getData"
+              @keyup.enter.native="getData"/>
         </el-col>
         <el-col :span="4" :offset="1">
           <el-button type="primary" @click="getData">搜索</el-button>
@@ -81,7 +100,7 @@
     </el-col>
     <el-col :span="20" :offset="2" class="house-list">
       <div class="house" v-for="item in house" :key="item.id">
-        <HouseCard :house-info="item"></HouseCard>
+        <HouseCard :house-info="item"/>
       </div>
       <div class="pagination">
         <el-pagination
@@ -152,21 +171,19 @@
           priceGt: null, // 搜索起始价格
           priceLe: null, // 搜索终止价格
           key: null, // 搜索关键字
+          sort: 'price', // 排序字段
+          order: 'asc', // 排序方式 asc/desc
         },
         pagination: {
           total: 0,
         },
+        sortTitle: '价格从低到高',
       };
     },
     mounted() {
       this.$nextTick(() => {
         this.getData();
       });
-    },
-    watch: {
-      params() {
-        this.getData();
-      },
     },
     methods: {
       /**
@@ -221,6 +238,18 @@
       handleCurrentChange(value) {
         this.params.pageNumber = value;
         this.getData();
+      },
+      /**
+       * 搜索排序
+       * @param {string} key 排序字段
+       * @param {string} method 排序方式（‘asc’, 'desc'）
+       * @param {string} title 标题
+       */
+      sequence(key, method, title) {
+        this.params.sort = key;
+        this.params.order = method;
+        this.getData();
+        this.sortTitle = title;
       },
     },
   };
@@ -282,7 +311,7 @@
   }
 
   .choose {
-    height: 30px;
+    height: 40px;
     &:first-child {
       margin-top: 15px;
     }
@@ -294,7 +323,7 @@
   .title {
     font-size: 1vw;
     font-weight: 700;
-    line-height: 30px;
+    line-height: 40px;
     padding-left: 2vw;
   }
 
@@ -310,7 +339,7 @@
       cursor: pointer;
       display: inline-block;
       font-size: 1vw;
-      line-height: 30px;
+      line-height: 40px;
       margin-right: 1vw;
     }
   }
@@ -347,5 +376,20 @@
     display: flex;
     height: 20vh;
     justify-content: center;
+  }
+
+  .sort {
+    background-color: #f1f1f1;
+    border-top: 1px solid #e0e0e0;
+    .el-dropdown {
+      background-color: white;
+      border-left: 1px solid #e0e0e0;
+      border-right: 1px solid #e0e0e0;
+      padding: 0 10px;
+    }
+    .el-dropdown-link {
+      font-size: 1vw;
+      line-height: 40px;
+    }
   }
 </style>
