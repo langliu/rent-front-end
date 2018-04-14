@@ -8,13 +8,23 @@
       </el-row>
       <el-form :model="form" :rules="rules" ref="loginForm" label-width="30%">
         <el-form-item label="用户名" prop="username">
-          <el-input type="text" v-model="form.username" class="login-input" auto-complete="off"/>
+          <el-input type="text"
+                    v-model="form.username"
+                    @keyup.enter.native="userLogin('loginForm')"
+                    class="login-input"
+                    auto-complete="off"/>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="form.password" class="login-input" auto-complete="off"/>
+          <el-input type="password"
+                    v-model="form.password"
+                    @keyup.enter.native="userLogin('loginForm')"
+                    class="login-input"
+                    auto-complete="off"/>
         </el-form-item>
         <el-form-item label="验证码" prop="verify">
-          <el-input v-model="form.verify" class="login-verify"/>
+          <el-input v-model="form.verify"
+                    class="login-verify"
+                    @keyup.enter.native="userLogin('loginForm')"/>
           <img :src="verifySrc" class="verify-img" @click="getVerify">
         </el-form-item>
         <el-form-item>

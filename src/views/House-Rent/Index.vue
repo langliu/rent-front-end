@@ -64,6 +64,17 @@
         </el-col>
       </el-row>
     </el-col>
+    <el-col :span="20" :offset="2" class="key-search">
+      <el-row>
+        <el-col :span="12">
+          <el-input v-model="params.key" @clear="getData" clearable prefix-icon="el-icon-search"
+                    placeholder="请输入关键字开始找房" @keyup.enter.native="getData"></el-input>
+        </el-col>
+        <el-col :span="4" :offset="1">
+          <el-button type="primary" @click="getData">搜索</el-button>
+        </el-col>
+      </el-row>
+    </el-col>
     <el-col :span="20" :offset="2" class="house-list">
       <div class="house" v-for="item in house" :key="item.id">
         <HouseCard :house-info="item"></HouseCard>
@@ -125,12 +136,8 @@
           area: null, // 区县
           priceGt: null, // 搜索起始价格
           priceLe: null, // 搜索终止价格
+          key: null, // 搜索关键字
         },
-        items: [
-          '../../assets/images/optimizilla/alexandra-gorn-485551-unsplash-min.jpg',
-          '../../assets/images/optimizilla/jonny-caspari-483355-unsplash-min.jpg',
-          'src/assets/images/optimizilla/naomi-hebert-188443-unsplash-min.jpg',
-        ],
       };
     },
     mounted() {
@@ -302,5 +309,9 @@
     &:last-child {
       border: none;
     }
+  }
+
+  .key-search {
+    margin-bottom: 2vh;
   }
 </style>
