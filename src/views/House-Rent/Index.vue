@@ -67,8 +67,12 @@
     <el-col :span="20" :offset="2" class="key-search">
       <el-row>
         <el-col :span="12">
-          <el-input v-model="params.key" @clear="getData" clearable prefix-icon="el-icon-search"
-                    placeholder="请输入关键字开始找房" @keyup.enter.native="getData"></el-input>
+          <el-input v-model="params.key"
+                    @clear="getData"
+                    clearable
+                    prefix-icon="el-icon-search"
+                    placeholder="请输入关键字开始找房"
+                    @keyup.enter.native="getData"/>
         </el-col>
         <el-col :span="4" :offset="1">
           <el-button type="primary" @click="getData">搜索</el-button>
@@ -78,6 +82,17 @@
     <el-col :span="20" :offset="2" class="house-list">
       <div class="house" v-for="item in house" :key="item.id">
         <HouseCard :house-info="item"></HouseCard>
+      </div>
+      <div class="pagination">
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="params.pageNumber"
+            :page-sizes="[20, 50, 100]"
+            :page-size="20"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="pagination.total">
+        </el-pagination>
       </div>
     </el-col>
   </el-row>
@@ -138,6 +153,9 @@
           priceLe: null, // 搜索终止价格
           key: null, // 搜索关键字
         },
+        pagination: {
+          total: 0,
+        },
       };
     },
     mounted() {
@@ -160,6 +178,7 @@
           .then(response => {
             if (response.data['success']) {
               this.house = response.data['result']['content'];
+              this.pagination.total = response.data['result']['totalElements'];
             } else {
               this.$message.error(response.data['message']);
             }
@@ -194,6 +213,14 @@
       },
       goToDetail(id) {
         this.$router.push(`/index/detail/${id}`);
+      },
+      handleSizeChange(value) {
+        this.params.pageSize = value;
+        this.getData();
+      },
+      handleCurrentChange(value) {
+        this.params.pageNumber = value;
+        this.getData();
       },
     },
   };
@@ -313,5 +340,12 @@
 
   .key-search {
     margin-bottom: 2vh;
+  }
+
+  .pagination {
+    align-items: center;
+    display: flex;
+    height: 20vh;
+    justify-content: center;
   }
 </style>
