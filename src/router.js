@@ -5,7 +5,6 @@ import About from './views/About.vue';
 import Login from './views/Login-Register/Login';
 import Register from './views/Login-Register/Register';
 import PersonalCenter from './views/User/Personal-Center';
-import ChangePassword from './views/User/Change-Password';
 import PostRentalInformation from './views/House-Rent/Post-Rental-Information';
 import Index from './views/House-Rent/Index';
 import Admin from './views/Admin/Admin';
@@ -14,6 +13,7 @@ import LeaseManagement from './views/Admin/Lease-Management';
 import AdvertAdd from './views/Admin/Advert-Add';
 import Advert from './views/Admin/Advert';
 import HouseInformation from './views/House-Rent/House-Information';
+import User from './views/User/User';
 
 Vue.use(Router);
 
@@ -38,6 +38,16 @@ export default new Router({
           path: 'detail/:id',
           component: HouseInformation,
         },
+        {
+          path: 'user',
+          component: User,
+          children: [
+            {
+              path: 'info',
+              component: PersonalCenter,
+            },
+          ],
+        },
       ],
     },
     {
@@ -54,16 +64,6 @@ export default new Router({
       path: '/register',
       name: 'register',
       component: Register,
-    },
-    {
-      path: '/user',
-      name: 'userInfo',
-      component: PersonalCenter,
-    },
-    {
-      path: '/user/changePassword',
-      name: 'changePassword',
-      component: ChangePassword,
     },
     {
       path: '/admin',

@@ -25,8 +25,8 @@
         <img :src="avatar" class="avatar">
         <span>{{username}}</span>
       </template>
-      <el-menu-item index="4-1" @click="goToPage('/user')">个人中心</el-menu-item>
-      <el-menu-item index="4-1" @click="goToPage('/user/changePassword')">修改密码</el-menu-item>
+      <el-menu-item index="4-1" @click="goToPage('/index/user/info')">个人中心</el-menu-item>
+      <!--<el-menu-item index="4-1" @click="goToPage('/user/changePassword')">修改密码</el-menu-item>-->
       <el-menu-item index="4-2" @click="logout">退出登录</el-menu-item>
     </el-submenu>
     <el-menu-item index="4" class="login" @click="goToPage('/login')" v-else>
