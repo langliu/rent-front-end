@@ -53,25 +53,25 @@
 <script>
   export default {
     name: 'Personal-Center',
-    data() {
+    data () {
       const telPhone = (rule, value, callbacks) => {
         if (value !== '') {
-          callbacks();
+          callbacks()
         } else if (!this.telPhone(value)) {
-          callbacks(new Error('请输入正确的电话号码'));
+          callbacks(new Error('请输入正确的电话号码'))
         } else {
-          callbacks();
+          callbacks()
         }
-      };
+      }
       const validatePass2 = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('请确认新密码'));
+          callback(new Error('请确认新密码'))
         } else if (value !== this.form.newPass) {
-          callback(new Error('两次输入密码不一致!'));
+          callback(new Error('两次输入密码不一致!'))
         } else {
-          callback();
+          callback()
         }
-      };
+      }
       return {
         user: {
           address: null, // 用户地址
@@ -176,39 +176,39 @@
             ],
         },
         disabledChange: true,
-      };
+      }
     },
-    mounted() {
+    mounted () {
       this.$nextTick(() => {
-        this.getUserInfo();
-      });
+        this.getUserInfo()
+      })
     }
     ,
     methods: {
       /**
        * 获取用户信息
        */
-      getUserInfo() {
+      getUserInfo () {
         this.axios
           .get(`/user/info/${sessionStorage.getItem('token')}`)
           .then(response => {
             if (response.data.success) {
-              this.user = response.data.result;
-              this.user.sex = this.user.sex.toString();
+              this.user = response.data.result
+              this.user.sex = this.user.sex.toString()
             } else {
-              this.$message.error(response.data.message);
+              this.$message.error(response.data.message)
             }
           })
-          .catch(error => console.error(error));
+          .catch(error => console.error(error))
       },
       /**
        * 使修改个人信息表单可用
        */
-      changeUserInfo() {
-        this.disabledChange = !this.disabledChange;
-        this.getUserInfo();
+      changeUserInfo () {
+        this.disabledChange = !this.disabledChange
+        this.getUserInfo()
       },
-      submitForm() {
+      submitForm () {
         const postData = {
           token: sessionStorage.getItem('token'),
           username: this.user.username,
@@ -217,47 +217,47 @@
           description: this.user.description,
           sex: this.user.sex,
           telPhone: this.user.telPhone,
-        };
+        }
         this.axios
           .post('/user/edit', postData)
           .then(response => {
             if (response.data.success) {
-              this.changeUserInfo();
-              this.getUserInfo();
+              this.changeUserInfo()
+              this.getUserInfo()
             } else {
-              this.$message.error(response.data.message);
+              this.$message.error(response.data.message)
             }
           })
-          .catch(error => this.$message.error(error));
+          .catch(error => this.$message.error(error))
       },
       /**
        * 修改密码
        */
-      modifyPass() {
+      modifyPass () {
         this.axios
           .post('/user/modifyPass', this.form)
           .then(response => {
             if (response.data.success) {
-              this.$router.push('/index/index');
+              this.$router.push('/index/index')
             } else {
-              this.$message.error(response.data.message);
+              this.$message.error(response.data.message)
             }
           })
           .catch(error => {
-            this.$message.error(error);
-          });
+            this.$message.error(error)
+          })
       },
-      submit() {
+      submit () {
         this.$refs.form.validate((valid) => {
           if (valid) {
-            this.modifyPass();
+            this.modifyPass()
           } else {
-            return false;
+            return false
           }
-        });
+        })
       },
     },
-  };
+  }
 </script>
 
 <style lang="less" scoped>

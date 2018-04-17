@@ -23,7 +23,7 @@
         <el-form-item label="图片">
           <el-upload
               class="avatar-uploader"
-              action="http://localhost:8888/image/upload"
+              action="http://localhost:8888/upload/file"
               :show-file-list="false"
               :on-success="handleSuccess"
               :before-upload="beforeUpload">
@@ -42,7 +42,7 @@
 <script>
   export default {
     name: 'Advert',
-    data() {
+    data () {
       return {
         advert: {
           title: '', // 标题
@@ -82,55 +82,55 @@
             },
           ],
         },
-      };
+      }
     },
     methods: {
       /**
        * 发布轮播图数据
        */
-      updateAdverts() {
+      updateAdverts () {
         this.axios
           .post('/advert/save', this.advert)
           .then(response => {
             if (response.data.success) {
-              this.$message.success('发布成功');
+              this.$message.success('发布成功')
               const timer = window.setTimeout(() => {
-                this.$router.push('/admin/advert');
-                clearTimeout(timer);
-              }, 1000);
+                this.$router.push('/admin/advert')
+                clearTimeout(timer)
+              }, 1000)
             } else {
-              this.$message.error(response.data.message);
+              this.$message.error(response.data.message)
             }
           })
-          .catch(error => this.$message.error(error));
+          .catch(error => this.$message.error(error))
       },
-      handleSuccess(res) {
-        this.advert.picUrl = res.result;
+      handleSuccess (res) {
+        this.advert.picUrl = res.result
       },
-      beforeUpload(file) {
-        const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
+      beforeUpload (file) {
+        const isJPG = file.type === 'image/jpeg'
+        const isLt2M = file.size / 1024 / 1024 < 2
 
         if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
+          this.$message.error('上传头像图片只能是 JPG 格式!')
         }
         if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
+          this.$message.error('上传头像图片大小不能超过 2MB!')
         }
-        return isJPG && isLt2M;
+        return isJPG && isLt2M
       },
-      formValidation() {
+      formValidation () {
         this.$refs['advert'].validate((valid) => {
           if (valid) {
-            this.updateAdverts();
+            this.updateAdverts()
           } else {
-            this.$message.error('请检查您的输入');
-            return false;
+            this.$message.error('请检查您的输入')
+            return false
           }
-        });
+        })
       },
     },
-  };
+  }
 </script>
 
 <style lang="less" scoped>

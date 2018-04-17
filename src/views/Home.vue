@@ -6,12 +6,12 @@
 </template>
 
 <script>
-  import Header from '../components/NavHeader';
+  import Header from '../components/NavHeader'
 
   export default {
     name: 'home',
     components: {
       Header,
     },
-  };
+  }
 </script>

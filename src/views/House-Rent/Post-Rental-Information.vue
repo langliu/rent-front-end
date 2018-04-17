@@ -37,25 +37,25 @@
           <el-input-number v-model="form.floorTotal" :min="0" :max="200"></el-input-number>
         </el-form-item>
         <el-form-item label="地区">
-          <el-select v-model="form.province" placeholder="省" @change="getCity($event)">
+          <el-select v-model="form.province" placeholder="省" @change="getCity">
             <el-option v-for="item in provinces"
-                       :key="item.regionId"
-                       :value="item.regionId"
-                       :label="item.regionName">
+                       :key="item.id"
+                       :value="item.id"
+                       :label="item.name">
             </el-option>
           </el-select>
-          <el-select v-model="form.city" placeholder="市" @change="getCounty($event)">
+          <el-select v-model="form.city" placeholder="市" @change="getCounty">
             <el-option v-for="item in city"
-                       :key="item.regionId"
-                       :value="item.regionId"
-                       :label="item.regionName">
+                       :key="item.id"
+                       :value="item.id"
+                       :label="item.name">
             </el-option>
           </el-select>
           <el-select v-model="form.area" placeholder="区/县">
             <el-option v-for="item in county"
-                       :key="item.regionId"
-                       :value="item.regionId"
-                       :label="item.regionName">
+                       :key="item.id"
+                       :value="item.id"
+                       :label="item.name">
             </el-option>
           </el-select>
         </el-form-item>
@@ -83,7 +83,7 @@
         <el-form-item label="照片">
           <el-upload
               class="upload-demo"
-              action="http://localhost:8888/image/upload"
+              action="http://localhost:8888/upload/file"
               :on-success="handleSuccess"
               :before-upload="handleUpload"
               :file-list="fileList"
@@ -92,6 +92,20 @@
               list-type="picture">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过1M，图片最多5张</div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="视频">
+          <el-upload
+              class="upload-demo"
+              action="http://localhost:8888/upload/file"
+              :on-success="videoSuccess"
+              :before-upload="videoUpload"
+              :file-list="fileList"
+              :limit="1"
+              :multiple="true"
+              list-type="picture">
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传mp4文件，且不超过40M</div>
           </el-upload>
         </el-form-item>
         <el-form-item>
@@ -105,21 +119,21 @@
 <script>
   export default {
     name: 'Post-Rental-Information',
-    data() {
+    data () {
       const number = (rule, value, callback) => {
         if (!Number(value)) {
-          callback(new Error('请输入数字'));
+          callback(new Error('请输入数字'))
         } else {
-          callback();
+          callback()
         }
-      };
+      }
       const telPhone = (rule, value, callbacks) => {
         if (!this.telPhone(value)) {
-          callbacks(new Error('请输入正确的联系方式'));
+          callbacks(new Error('请输入正确的联系方式'))
         } else {
-          callbacks();
+          callbacks()
         }
-      };
+      }
       return {
         form: {
           token: sessionStorage.getItem('token'),
@@ -143,7 +157,10 @@
           image1: '',
           image2: '',
           image3: '',
+          image4: '',
+          image5: '',
           description: '', // 描述
+          video: '', // 视频链接
         },
         rules: {
           type: [
@@ -234,123 +251,131 @@
         county: [], // 县/区
         fileList: [], // 上传的文件列表
         images: [],
-      };
+      }
     },
-    mounted() {
+    mounted () {
       this.$nextTick(() => {
-        this.getProvince();
-      });
+        this.getProvince()
+      })
     },
     methods: {
       /**
        * 获取省数据
        */
-      getProvince() {
+      getProvince () {
         this.axios
           .get('/region/getProvince')
           .then(response => {
             if (response.data.success) {
-              this.provinces = response.data.result;
+              this.provinces = response.data.result
             }
           })
           .catch(error => {
-            this.$message.error(error);
-          });
+            this.$message.error(error)
+          })
       },
       /**
        * 获取市数据
        * @param {string} id 上级省的id
        */
-      getCity(id) {
-        this.form.city = '';
-        this.form.area = '';
-        this.county = [];
+      getCity (id) {
+        this.form.city = ''
+        this.form.area = ''
+        this.county = []
         this.axios
           .get(`/region/getChildren/${id}`)
           .then(response => {
-            this.city = response.data.result;
-          });
+            this.city = response.data.result
+          })
       },
       /**
        * 获取区县数据
        * @param {string} id 上级市id
        */
-      getCounty(id) {
-        this.form.area = '';
+      getCounty (id) {
+        this.form.area = ''
         this.axios
           .get(`/region/getChildren/${id}`)
           .then(response => {
-            this.county = response.data.result;
-          });
+            this.county = response.data.result
+          })
       },
       /**
        * 提交租赁信息数据
        **/
-      postData() {
+      postData () {
         // 转换租赁信息格式为number类型
-        this.form.type = Number.parseInt(this.form.type);
+        this.form.type = Number.parseInt(this.form.type)
 
-        if (this.images.length === 1) {
-          this.form.image1 = this.images[0];
-        } else if (this.images.length === 2) {
-          this.form.image1 = this.images[0];
-          this.form.image2 = this.images[1];
-        } else {
-          this.form.image1 = this.images[0];
-          this.form.image2 = this.images[1];
-          this.form.image3 = this.images[2];
+        for (let i = 1; i <= this.images.length; i++) {
+          this.form[`image${i}`] = this.images[i - 1]
         }
         this.axios
           .post('/rent/post', this.form)
           .then(response => {
             // 表单提交成功后跳转到首页
             if (response.data.success) {
-              this.$router.push('/index/index');
+              this.$router.push('/index/index')
             } else {
-              this.$message.error(response.data.message);
+              this.$message.error(response.data.message)
             }
           })
-          .catch(error => this.$message.error(error));
+          .catch(error => this.$message.error(error))
       },
       /**
        * 上传前的照片格式和文件大小检查
        * @param {*} file 文件
        **/
-      handleUpload(file) {
-        const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
+      handleUpload (file) {
+        const isJPG = file.type === 'image/jpeg'
+        const isLt2M = file.size / 1024 / 1024 < 2
 
         if (!isJPG) {
-          this.$message.error('上传图片只能是 JPG 格式!');
+          this.$message.error('上传图片只能是 JPG 格式!')
         }
         if (!isLt2M) {
-          this.$message.error('上传图片大小不能超过 2MB!');
+          this.$message.error('上传图片大小不能超过 2MB!')
         }
-        return isJPG && isLt2M;
+        return isJPG && isLt2M
       },
-      handleSuccess(response) {
-        this.images.push(response.result);
+      handleSuccess (response) {
+        this.images.push(response.result)
+      },
+      videoUpload (file) {
+        const isMP4 = file.type === 'video/mp4'
+        const isLt40M = file.size / 1024 / 1024 < 40
+
+        if (!isMP4) {
+          this.$message.error('上传视频只能是 MP4 格式!')
+        }
+        if (!isLt40M) {
+          this.$message.error('上传图片大小不能超过 40MB!')
+        }
+        return isLt40M && isMP4
+      },
+      videoSuccess (response) {
+        this.form.video = response.result
       },
       /**
        * 电话号码验证
        * @param {string} telNumber 电话号码
        */
-      telPhone(telNumber) {
-        const reg = /^1(3[0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|8[0-9]|9[89])\d{8}$/g;
-        return reg.test(telNumber);
+      telPhone (telNumber) {
+        const reg = /^1(3[0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|8[0-9]|9[89])\d{8}$/g
+        return reg.test(telNumber)
       },
-      formValidation() {
+      formValidation () {
         this.$refs['form'].validate((valid) => {
           if (valid) {
-            this.postData();
+            this.postData()
           } else {
-            this.$message.error('请检查您的输入');
-            return false;
+            this.$message.error('请检查您的输入')
+            return false
           }
-        });
+        })
       },
     },
-  };
+  }
 </script>
 
 <style lang="less" scoped>

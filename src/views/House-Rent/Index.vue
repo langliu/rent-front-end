@@ -119,8 +119,8 @@
 </template>
 
 <script>
-  import Carousel from '../../components/Carousel';
-  import HouseCard from '../../components/House-Card';
+  import Carousel from '../../components/Carousel'
+  import HouseCard from '../../components/House-Card'
 
   export default {
     name: 'Index',
@@ -128,7 +128,7 @@
       Carousel,
       HouseCard,
     },
-    data() {
+    data () {
       return {
         house: [{
           'id': 0,
@@ -178,66 +178,66 @@
           total: 0,
         },
         sortTitle: '价格从低到高',
-      };
+      }
     },
-    mounted() {
+    mounted () {
       this.$nextTick(() => {
-        this.getData();
-      });
+        this.getData()
+      })
     },
     methods: {
       /**
        * 获取页面数据
        */
-      getData() {
+      getData () {
         this.axios
           .get('/rent/search', {params: this.params})
           .then(response => {
             if (response.data['success']) {
-              this.house = response.data['result']['content'];
-              this.pagination.total = response.data['result']['totalElements'];
+              this.house = response.data['result']['content']
+              this.pagination.total = response.data['result']['totalElements']
             } else {
-              this.$message.error(response.data['message']);
+              this.$message.error(response.data['message'])
             }
           })
-          .catch(error => this.$message.error(error));
+          .catch(error => this.$message.error(error))
       },
       /**
        * 设置搜索价格
        * @param {*} startPrice 搜索起始价格
        * @param {*} endPrice 搜索终止价格
        */
-      setPrice(startPrice = null, endPrice = null) {
-        this.params.priceGt = startPrice;
-        this.params.priceLe = endPrice;
-        this.getData();
+      setPrice (startPrice = null, endPrice = null) {
+        this.params.priceGt = startPrice
+        this.params.priceLe = endPrice
+        this.getData()
       },
       /**
        * 设置搜索房屋室数量
        * @param {*} number 室数量
        */
-      setRoomNumber(number = null) {
-        this.params.roomNum = number;
-        this.getData();
+      setRoomNumber (number = null) {
+        this.params.roomNum = number
+        this.getData()
       },
       /**
        * 设置搜索出租类型
        * @param {*} type 出租类型
        */
-      setType(type = null) {
-        this.params.type = type;
-        this.getData();
+      setType (type = null) {
+        this.params.type = type
+        this.getData()
       },
-      goToDetail(id) {
-        this.$router.push(`/index/detail/${id}`);
+      goToDetail (id) {
+        this.$router.push(`/index/detail/${id}`)
       },
-      handleSizeChange(value) {
-        this.params.pageSize = value;
-        this.getData();
+      handleSizeChange (value) {
+        this.params.pageSize = value
+        this.getData()
       },
-      handleCurrentChange(value) {
-        this.params.pageNumber = value;
-        this.getData();
+      handleCurrentChange (value) {
+        this.params.pageNumber = value
+        this.getData()
       },
       /**
        * 搜索排序
@@ -245,14 +245,14 @@
        * @param {string} method 排序方式（‘asc’, 'desc'）
        * @param {string} title 标题
        */
-      sequence(key, method, title) {
-        this.params.sort = key;
-        this.params.order = method;
-        this.getData();
-        this.sortTitle = title;
+      sequence (key, method, title) {
+        this.params.sort = key
+        this.params.order = method
+        this.getData()
+        this.sortTitle = title
       },
     },
-  };
+  }
 </script>
 
 <style lang="less" scoped>
