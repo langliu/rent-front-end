@@ -47,6 +47,12 @@
           </el-button>
         </template>
       </el-table-column>
+      <el-table-column label="上架" width="100" fixed="right">
+        <template slot-scope="scope">
+          <el-button type="danger" size="mini" :disabled="scope.row.status!==3" @click="rentPass(scope.row.id)">上架
+          </el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="发布审核" fixed="right" width="150">
         <template slot-scope="scope">
           <el-button type="primary"
@@ -100,214 +106,216 @@
 </template>
 
 <script>
-  export default {
-    name: 'Lease-Management',
-    data() {
-      return {
-        houses: [{
-          'id': 8,
-          'createBy': null,
-          'createTime': null,
-          'updateBy': null,
-          'updateTime': '2018-03-29 17:38:25',
-          'type': 0,
-          'houseName': '西南石油',
-          'houseArea': null,
-          'roomNum': 1,
-          'hallNum': null,
-          'toiletNum': null,
-          'floor': null,
-          'floorTotal': null,
-          'province': null,
-          'city': null,
-          'area': null,
-          'address': null,
-          'price': 100,
-          'title': '单间850家具家电全',
-          'mobile': null,
-          'qq': null,
-          'contact': null,
-          'image1': null,
-          'image2': null,
-          'image3': null,
-          'userId': null,
-          'status': 1,
-          'description': null,
-          'backReason': null,
-          'dealStatus': null,
-          'dealPrice': null,
-        }],
-        dialogVisible: false,
-        reason: '',
-        multipleSelection: [],
-        totalElements: 0,
-        params: {
-          pageSize: 20,
-          pageNumber: 1,
+export default {
+  name: 'Lease-Management',
+  data() {
+    return {
+      houses: [
+        {
+          id: 8,
+          createBy: null,
+          createTime: null,
+          updateBy: null,
+          updateTime: '2018-03-29 17:38:25',
+          type: 0,
+          houseName: '西南石油',
+          houseArea: null,
+          roomNum: 1,
+          hallNum: null,
+          toiletNum: null,
+          floor: null,
+          floorTotal: null,
+          province: null,
+          city: null,
+          area: null,
+          address: null,
+          price: 100,
+          title: '单间850家具家电全',
+          mobile: null,
+          qq: null,
+          contact: null,
+          image1: null,
+          image2: null,
+          image3: null,
+          userId: null,
+          status: 1,
+          description: null,
+          backReason: null,
+          dealStatus: null,
+          dealPrice: null,
         },
-        rejectId:'0', // 驳回Id
-      };
-    },
-    mounted() {
-      this.$nextTick(() => {
-        this.getUserInfo();
-      });
-    },
-    methods: {
-      getUserInfo() {
-        this.axios
-          .get('/rent/getByPage', {
-            params: this.params,
-          })
-          .then(response => {
-            if (response.data.success) {
-              this.houses = response.data.result['content'];
-              this.totalElements = response.data.result['totalElements'];
-            }
-          });
+      ],
+      dialogVisible: false,
+      reason: '',
+      multipleSelection: [],
+      totalElements: 0,
+      params: {
+        pageSize: 20,
+        pageNumber: 1,
       },
-      /**
-       * 通过某租赁信息的发布
-       * @param {string} id 该租赁信息的id
-       */
-      rentPass(id) {
-        this.axios
-          .post('/rent/pass', {
-            rentId: id,
-            token: sessionStorage.getItem('token'),
-          })
-          .then(response => {
-            console.log(response);
-            if (response.data.success) {
-              this.getUserInfo();
-            } else {
-              // this.$message.error(response.data.message);
-            }
-          })
-          .catch(error => {
-            this.$message.error(error);
-          });
-      },
-      /**
-       * 驳回租赁信息的发布
-       * @param {string} id 租赁信息的id
-       * @param {string} reason 驳回理由
-       */
-      rejectPass(id, reason) {
-        this.axios
-          .post('/rent/admin/back', {
-            rentId: id,
-            token: sessionStorage.getItem('token'),
-            reason: reason,
-          })
-          .then(response => {
-            if (response.data.success) {
-              this.getUserInfo();
-              this.dialogVisible = false;
-            } else {
-              this.$message.error(response.data.message);
-            }
-          })
-          .catch(error => {
-            this.$message.error(error);
-          });
-      },
-      /**
-       * 租赁信息下架
-       * @param {string} rentId 租赁信息id
-       */
-      dropOff(rentId) {
-        this.axios
-          .post('/rent/admin/cancel', {
-            rentId: rentId,
-            token: sessionStorage.getItem('token'),
-          })
-          .then(response => {
-            if (response.data.success) {
-              this.getUserInfo();
-            } else {
-              this.$message.error(response.data.message);
-            }
-          })
-          .catch(error => {
-            this.$message.error(error);
-          });
-      },
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-      },
-      deleteSelect() {
-        let ids = [];
-        this.multipleSelection.forEach((item) => {
-          ids.push(item.id);
+      rejectId: '0', // 驳回Id
+    };
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.getUserInfo();
+    });
+  },
+  methods: {
+    getUserInfo() {
+      this.axios
+        .get('/rent/getByPage', {
+          params: this.params,
+        })
+        .then(response => {
+          if (response.data.success) {
+            this.houses = response.data.result['content'];
+            this.totalElements = response.data.result['totalElements'];
+          }
         });
-        console.log(ids.join(','));
-        this.axios
-          .delete(`/rent/delByIds?ids=${ids.join(',')}`)
-          .then(response => {
-            if (response.data.success) {
-              this.getUserInfo();
-            } else {
-              this.$message.error(response.data.message);
-            }
-          })
-          .catch(error => {
-            this.$message.error(error);
-          });
-      },
-      /**
-       * 修改分页大小
-       * @param {number} val 分页大小
-       */
-      handleSizeChange(val) {
-        this.params.pageSize = val;
-        this.getUserInfo();
-      },
-      /**
-       * 分页跳转
-       * @param {number} val 要跳转的页面
-       */
-      handleCurrentChange(val) {
-        this.params.pageNumber = val;
-        this.getUserInfo();
-      },
     },
-    filters: {
-      type(value) {
-        if (!value) {
-          return '保密';
-        } else if (value === 1) {
-          return '合租';
-        } else {
-          return '整租';
-        }
-      },
-      status(value) {
-        switch (value) {
-          case 0:
-            return '待审核';
-          case 1:
-            return '审核通过';
-          case 2:
-            return '审核未通过';
-          case 3:
-            return '已下架';
-        }
-      },
+    /**
+     * 通过某租赁信息的发布
+     * @param {string} id 该租赁信息的id
+     */
+    rentPass(id) {
+      this.axios
+        .post('/rent/pass', {
+          rentId: id,
+          token: sessionStorage.getItem('token'),
+        })
+        .then(response => {
+          console.log(response);
+          if (response.data.success) {
+            this.getUserInfo();
+          } else {
+            // this.$message.error(response.data.message);
+          }
+        })
+        .catch(error => {
+          this.$message.error(error);
+        });
     },
-  };
+    /**
+     * 驳回租赁信息的发布
+     * @param {string} id 租赁信息的id
+     * @param {string} reason 驳回理由
+     */
+    rejectPass(id, reason) {
+      this.axios
+        .post('/rent/admin/back', {
+          rentId: id,
+          token: sessionStorage.getItem('token'),
+          reason: reason,
+        })
+        .then(response => {
+          if (response.data.success) {
+            this.getUserInfo();
+            this.dialogVisible = false;
+          } else {
+            this.$message.error(response.data.message);
+          }
+        })
+        .catch(error => {
+          this.$message.error(error);
+        });
+    },
+    /**
+     * 租赁信息下架
+     * @param {string} rentId 租赁信息id
+     */
+    dropOff(rentId) {
+      this.axios
+        .post('/rent/admin/cancel', {
+          rentId: rentId,
+          token: sessionStorage.getItem('token'),
+        })
+        .then(response => {
+          if (response.data.success) {
+            this.getUserInfo();
+          } else {
+            this.$message.error(response.data.message);
+          }
+        })
+        .catch(error => {
+          this.$message.error(error);
+        });
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    deleteSelect() {
+      let ids = [];
+      this.multipleSelection.forEach(item => {
+        ids.push(item.id);
+      });
+      console.log(ids.join(','));
+      this.axios
+        .delete(`/rent/delByIds?ids=${ids.join(',')}`)
+        .then(response => {
+          if (response.data.success) {
+            this.getUserInfo();
+          } else {
+            this.$message.error(response.data.message);
+          }
+        })
+        .catch(error => {
+          this.$message.error(error);
+        });
+    },
+    /**
+     * 修改分页大小
+     * @param {number} val 分页大小
+     */
+    handleSizeChange(val) {
+      this.params.pageSize = val;
+      this.getUserInfo();
+    },
+    /**
+     * 分页跳转
+     * @param {number} val 要跳转的页面
+     */
+    handleCurrentChange(val) {
+      this.params.pageNumber = val;
+      this.getUserInfo();
+    },
+  },
+  filters: {
+    type(value) {
+      if (!value) {
+        return '保密';
+      } else if (value === 1) {
+        return '合租';
+      } else {
+        return '整租';
+      }
+    },
+    status(value) {
+      switch (value) {
+        case 0:
+          return '待审核';
+        case 1:
+          return '已上架';
+        case 2:
+          return '审核未通过';
+        case 3:
+          return '已下架';
+      }
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>
-  .avatar {
-    height: 50px;
-    width: 80px;
-  }
+.avatar {
+  height: 50px;
+  width: 80px;
+}
 
-  .pagination {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 5vh;
-    margin-top: 5vh;
-  }
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5vh;
+  margin-top: 5vh;
+}
 </style>
