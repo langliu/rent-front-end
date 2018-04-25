@@ -51,217 +51,219 @@
 </template>
 
 <script>
-  export default {
-    name: 'Personal-Center',
-    data () {
-      const telPhone = (rule, value, callbacks) => {
-        if (value !== '') {
-          callbacks()
-        } else if (!this.telPhone(value)) {
-          callbacks(new Error('请输入正确的电话号码'))
-        } else {
-          callbacks()
-        }
+export default {
+  name: 'Personal-Center',
+  data() {
+    const telPhone = (rule, value, callbacks) => {
+      if (value !== '') {
+        callbacks();
+      } else if (!this.telPhone(value)) {
+        callbacks(new Error('请输入正确的电话号码'));
+      } else {
+        callbacks();
       }
-      const validatePass2 = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请确认新密码'))
-        } else if (value !== this.form.newPass) {
-          callback(new Error('两次输入密码不一致!'))
-        } else {
-          callback()
-        }
+    };
+    const validatePass2 = (rule, value, callback) => {
+      console.log(value);
+      if (value === '') {
+        callback(new Error('请确认新密码'));
+      } else if (this.form.confirmNewPass !== this.form.newPass) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback();
       }
-      return {
-        user: {
-          address: null, // 用户地址
-          avatar: null, // 头像
-          createBy: null, //
-          createTime: null, // 注册时间
-          description: null, // 个人描述
-          email: null, // 邮箱
-          id: null, // id
-          newPass: null, // 新密码
-          nickName: null, // 昵称
-          password: null, // 登录密码
-          sex: null, // 性别
-          status: null, //
-          telPhone: null, // 电话
-          token: '', // token
-          type: null, // 0普通用户 1管理员
-          updateBy: null,
-          updateTime: null,
-          username: null, // 用户名
-        },
-        form: {
-          password: '',
-          newPass: '',
-          confirmNewPass: '',
-          token: sessionStorage.getItem('token'),
-        },
-        rules: {
-          password: [
-            {
-              required: true,
-              message: '请填写密码',
-              trigger: 'blur',
-            },
-            {
-              min: 6,
-              max: 16,
-              message: '密码长度为6-16位',
-              trigger: 'blur',
-            },
-          ],
-          confirmPassword: [
-            {
-              validator: validatePass2,
-              trigger: 'blur,change',
-            },
-          ],
-        },
-        userRules: {
-          username: [
-            {
-              required: true,
-              message: '请输入您的用户名',
-              trigger: 'blur',
-            },
-            {
-              min: 2,
-              max: 10,
-              message: '用户名长度在2到10个字符',
-              trigger: 'blur',
-            },
-          ],
-          password:
-            [
-              {
-                required: true,
-                message: '请输入您的登录密码',
-                trigger: 'blur',
-              },
-              {
-                min: 6,
-                max: 16,
-                message: '密码长度在6到16个字符',
-                trigger: 'blur,change',
-              },
-            ],
-          email:
-            [
-              {
-                required: true,
-                message: '请输入邮件地址',
-                trigger: 'blur',
-              },
-              {
-                type: 'email',
-                message: '请输入正确的邮箱地址',
-                trigger: 'blur,change',
-              },
-            ],
-          telPhone:
-            [
-              {
-                validator: telPhone,
-                trigger: 'blur',
-              },
-              {
-                min: 11,
-                max: 11,
-                message: '请输入正确的手机号',
-                trigger: 'blur',
-              },
-            ],
-        },
-        disabledChange: true,
-      }
-    },
-    mounted () {
-      this.$nextTick(() => {
-        this.getUserInfo()
-      })
-    }
-    ,
-    methods: {
-      /**
-       * 获取用户信息
-       */
-      getUserInfo () {
-        this.axios
-          .get(`/user/info/${sessionStorage.getItem('token')}`)
-          .then(response => {
-            if (response.data.success) {
-              this.user = response.data.result
-              this.user.sex = this.user.sex.toString()
-            } else {
-              this.$message.error(response.data.message)
-            }
-          })
-          .catch(error => console.error(error))
+    };
+    return {
+      user: {
+        address: null, // 用户地址
+        avatar: null, // 头像
+        createBy: null, //
+        createTime: null, // 注册时间
+        description: null, // 个人描述
+        email: null, // 邮箱
+        id: null, // id
+        newPass: null, // 新密码
+        nickName: null, // 昵称
+        password: null, // 登录密码
+        sex: null, // 性别
+        status: null, //
+        telPhone: null, // 电话
+        token: '', // token
+        type: null, // 0普通用户 1管理员
+        updateBy: null,
+        updateTime: null,
+        username: null, // 用户名
       },
-      /**
-       * 使修改个人信息表单可用
-       */
-      changeUserInfo () {
-        this.disabledChange = !this.disabledChange
-        this.getUserInfo()
+      form: {
+        password: '',
+        newPass: '',
+        confirmNewPass: '',
+        token: sessionStorage.getItem('token'),
       },
-      submitForm () {
-        const postData = {
-          token: sessionStorage.getItem('token'),
-          username: this.user.username,
-          email: this.user.email,
-          avatar: this.user.avatar,
-          description: this.user.description,
-          sex: this.user.sex,
-          telPhone: this.user.telPhone,
-        }
-        this.axios
-          .post('/user/edit', postData)
-          .then(response => {
-            if (response.data.success) {
-              this.changeUserInfo()
-              this.getUserInfo()
-            } else {
-              this.$message.error(response.data.message)
-            }
-          })
-          .catch(error => this.$message.error(error))
+      rules: {
+        password: [
+          // {
+          //   required: true,
+          //   message: '请填写密码',
+          //   trigger: 'blur',
+          // },
+          {
+            min: 6,
+            max: 16,
+            message: '密码长度为6-16位',
+            trigger: 'blur',
+          },
+        ],
+        confirmPassword: [
+          // {
+          //   required: true,
+          //   message: '请确认您的新密码',
+          //   trigger: 'blur',
+          // },
+          {
+            validator: validatePass2,
+            trigger: 'blur',
+          },
+        ],
       },
-      /**
-       * 修改密码
-       */
-      modifyPass () {
-        this.axios
-          .post('/user/modifyPass', this.form)
-          .then(response => {
-            if (response.data.success) {
-              this.$router.push('/index/index')
-            } else {
-              this.$message.error(response.data.message)
-            }
-          })
-          .catch(error => {
-            this.$message.error(error)
-          })
+      userRules: {
+        username: [
+          {
+            required: true,
+            message: '请输入您的用户名',
+            trigger: 'blur',
+          },
+          {
+            min: 2,
+            max: 10,
+            message: '用户名长度在2到10个字符',
+            trigger: 'blur',
+          },
+        ],
+        password: [
+          {
+            required: true,
+            message: '请输入您的登录密码',
+            trigger: 'blur',
+          },
+          {
+            min: 6,
+            max: 16,
+            message: '密码长度在6到16个字符',
+            trigger: 'blur,change',
+          },
+        ],
+        email: [
+          {
+            required: true,
+            message: '请输入邮件地址',
+            trigger: 'blur',
+          },
+          {
+            type: 'email',
+            message: '请输入正确的邮箱地址',
+            trigger: 'blur,change',
+          },
+        ],
+        telPhone: [
+          {
+            validator: telPhone,
+            trigger: 'blur',
+          },
+          {
+            min: 11,
+            max: 11,
+            message: '请输入正确的手机号',
+            trigger: 'blur',
+          },
+        ],
       },
-      submit () {
-        this.$refs.form.validate((valid) => {
-          if (valid) {
-            this.modifyPass()
+      disabledChange: true,
+    };
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.getUserInfo();
+    });
+  },
+  methods: {
+    /**
+     * 获取用户信息
+     */
+    getUserInfo() {
+      this.axios
+        .get(`/user/info/${sessionStorage.getItem('token')}`)
+        .then(response => {
+          if (response.data.success) {
+            this.user = response.data.result;
+            this.user.sex = this.user.sex ? this.user.sex.toString() : '';
           } else {
-            return false
+            this.$message.error(response.data.message);
           }
         })
-      },
+        .catch(error => console.error(error));
     },
-  }
+    /**
+     * 使修改个人信息表单可用
+     */
+    changeUserInfo() {
+      this.disabledChange = !this.disabledChange;
+      this.getUserInfo();
+    },
+    submitForm() {
+      const postData = {
+        token: sessionStorage.getItem('token'),
+        username: this.user.username,
+        email: this.user.email,
+        avatar: this.user.avatar,
+        description: this.user.description,
+        sex: this.user.sex,
+        telPhone: this.user.telPhone,
+      };
+      this.axios
+        .post('/user/edit', postData)
+        .then(response => {
+          if (response.data.success) {
+            this.changeUserInfo();
+            this.getUserInfo();
+          } else {
+            this.$message.error(response.data.message);
+          }
+        })
+        .catch(error => this.$message.error(error));
+    },
+    /**
+     * 修改密码
+     */
+    modifyPass() {
+      this.axios
+        .post('/user/modifyPass', this.form)
+        .then(response => {
+          if (response.data.success) {
+            this.$router.push('/index/index');
+          } else {
+            this.$message.error(response.data.message);
+          }
+        })
+        .catch(error => {
+          this.$message.error(error);
+        });
+    },
+    submit() {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.modifyPass();
+        } else {
+          return false;
+        }
+      });
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>
-  .title {
-    text-align: center;
-  }
+.title {
+  text-align: center;
+}
 </style>
