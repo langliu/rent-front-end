@@ -8,7 +8,7 @@
     <el-table-column prop="id" label="ID" width="100"></el-table-column>
     <el-table-column label="照片" width="100">
       <template slot-scope="scope">
-      <img :src="scope.row.image1" class="avatar">
+      <img :src="(scope.row.image1+'?imageslim')" class="avatar">
       </template>
     </el-table-column>
     <el-table-column prop="houseName" label="房屋名称" width="120"></el-table-column>

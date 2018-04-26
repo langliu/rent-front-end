@@ -2,7 +2,7 @@
 <el-table border :data="advert">
   <el-table-column label="照片" width="100">
     <template slot-scope="scope">
-    <img :src="scope.row.picUrl" class="avatar">
+    <img :src="(scope.row.picUrl+'?imageslim')" class="avatar">
     </template>
   </el-table-column>
   <el-table-column label="ID" prop="id"></el-table-column>

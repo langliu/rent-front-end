@@ -1,6 +1,6 @@
 <template>
 <div class="house-card" @click="goToPage()">
-  <img :src="houseInfo.image1" class="card-img">
+  <img :src="(`${houseInfo.image1}?imageslim`)" class="card-img">
   <div class="house-info">
     <h6>{{houseInfo.title}}</h6>
     <p>

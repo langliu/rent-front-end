@@ -1,7 +1,7 @@
 <template>
 <el-carousel :interval="4000" type="card" height="40vh">
   <el-carousel-item v-for="item in advert" :key="item.id">
-    <img :src="item.picUrl"
+    <img :src="(item.picUrl+'?imageslim')"
          :alt="item.title"
          class="carousel-img"
          @click="goToPage(item.type,item.relateId,item.redirectUrl)">

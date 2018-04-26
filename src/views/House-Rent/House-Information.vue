@@ -8,18 +8,18 @@
   </header>
   <main class="main">
     <el-carousel :interval="3000" height="65vh">
-      <el-carousel-item>
+      <el-carousel-item v-if="house.video">
         <img :src="house.video">
       </el-carousel-item>
-      <el-carousel-item>
-        <img :src="house.image1">
+      <el-carousel-item v-for="img in images ">
+        <img :src="img">
       </el-carousel-item>
-      <el-carousel-item>
-        <img :src="house.image2">
-      </el-carousel-item>
-      <el-carousel-item>
-        <img :src="house.image3">
-      </el-carousel-item>
+      <!--<el-carousel-item>-->
+      <!--<img :src="house.image2">-->
+      <!--</el-carousel-item>-->
+      <!--<el-carousel-item>-->
+      <!--<img :src="house.image3">-->
+      <!--</el-carousel-item>-->
     </el-carousel>
     <div class="info">
       <h3 class="price">
@@ -66,14 +66,17 @@ export default {
         'mobile': null,
         'qq': null,
         'contact': null,
-        video: null,
+        'video': null,
         'image1': null,
         'image2': null,
         'image3': null,
+        'image4': null,
+        'image5': null,
         'userId': 0,
         'status': 0,
         'description': null
-      }
+      },
+      images: []
     }
   },
   mounted () {
@@ -92,6 +95,11 @@ export default {
         .then(response => {
           if (response.data.success) {
             this.house = response.data.result
+            for (let index = 1; index <= 5; ++index) {
+              if (this.house[`image${index}`]) {
+                this.images.push(this.house[`image${index}`]+'?imageslim')
+              }
+            }
           } else {
             this.$message.error(response.data.message)
           }
