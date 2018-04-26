@@ -11,7 +11,7 @@
       <el-carousel-item v-if="house.video">
         <img :src="house.video">
       </el-carousel-item>
-      <el-carousel-item v-for="img in images ">
+      <el-carousel-item v-for="img in images" :key="img">
         <img :src="img">
       </el-carousel-item>
       <!--<el-carousel-item>-->
@@ -97,7 +97,7 @@ export default {
             this.house = response.data.result
             for (let index = 1; index <= 5; ++index) {
               if (this.house[`image${index}`]) {
-                this.images.push(this.house[`image${index}`]+'?imageslim')
+                this.images.push(this.house[`image${index}`] + '?imageslim')
               }
             }
           } else {

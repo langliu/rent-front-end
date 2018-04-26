@@ -240,7 +240,10 @@ export default {
         .post('/user/modifyPass', this.form)
         .then(response => {
           if (response.data.success) {
-            this.$router.push('/index/index')
+            this.$message.success('已成功修改密码')
+            setTimeout(() => {
+              this.$router.push('/index/user/info')
+            }, 1000)
           } else {
             this.$message.error(response.data.message)
           }

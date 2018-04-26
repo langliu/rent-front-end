@@ -10,7 +10,7 @@
           </el-menu-item>
           <el-menu-item index="2">
             <i class="el-icon-printer"></i>
-            <span slot="title">我的发布</span>
+            <span slot="title" @click="$router.push('/index/user/postRent')">我的发布</span>
           </el-menu-item>
         </el-menu>
       </el-aside>
@@ -51,5 +51,6 @@ export default {
 
 .user-center {
   background: #f5f5f5;
+  min-height: 89vh;
 }
 </style>
