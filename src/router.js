@@ -27,16 +27,16 @@ export default new Router({
         {
           path: 'postRentalInformation',
           name: 'postRentalInformation',
-          component: PostRentalInformation,
+          component: PostRentalInformation
         },
         {
           path: 'index',
           name: 'index',
-          component: Index,
+          component: Index
         },
         {
           path: 'detail/:id',
-          component: HouseInformation,
+          component: HouseInformation
         },
         {
           path: 'user',
@@ -44,26 +44,26 @@ export default new Router({
           children: [
             {
               path: 'info',
-              component: PersonalCenter,
-            },
-          ],
-        },
-      ],
+              component: PersonalCenter
+            }
+          ]
+        }
+      ]
     },
     {
       path: '/about',
       name: 'about',
-      component: About,
+      component: About
     },
     {
       path: '/login',
       name: 'login',
-      component: Login,
+      component: Login
     },
     {
       path: '/register',
       name: 'register',
-      component: Register,
+      component: Register
     },
     {
       path: '/admin',
@@ -73,28 +73,28 @@ export default new Router({
         {
           path: 'users',
           name: 'userManagement',
-          component: UserManagement,
+          component: UserManagement
         },
         {
           path: 'lease',
           name: 'leaseManagement',
-          component: LeaseManagement,
+          component: LeaseManagement
         },
         {
           path: 'advertAdd',
           name: 'advertAdd',
-          component: AdvertAdd,
+          component: AdvertAdd
         },
         {
           path: 'advert',
           name: 'advert',
-          component: Advert,
-        },
-      ],
+          component: Advert
+        }
+      ]
     },
     {
       path: '/',
-      redirect: '/login',
-    },
-  ],
+      redirect: '/login'
+    }
+  ]
 })
