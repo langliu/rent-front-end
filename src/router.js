@@ -36,7 +36,14 @@ export default new Router({
         {
           path: 'postRentalInformation',
           name: 'postRentalInformation',
-          component: PostRentalInformation
+          component: PostRentalInformation,
+          beforeEnter: (to, from, next) => {
+            if (sessionStorage.getItem('token')) {
+              next()
+            } else {
+              next('/login')
+            }
+          }
         },
         {
           path: 'index',
@@ -50,6 +57,13 @@ export default new Router({
         {
           path: 'user',
           component: User,
+          beforeEnter: (to, from, next) => {
+            if (sessionStorage.getItem('token')) {
+              next()
+            } else {
+              next('/login')
+            }
+          },
           children: [
             {
               path: 'info',
@@ -82,6 +96,13 @@ export default new Router({
       path: '/admin',
       name: 'admin',
       component: Admin,
+      beforeEnter: (to, from, next) => {
+        if (sessionStorage.getItem('token')) {
+          next()
+        } else {
+          next('/login')
+        }
+      },
       children: [
         {
           path: 'users',
