@@ -8,18 +8,12 @@
   </header>
   <main class="main">
     <el-carousel :interval="3000" height="65vh">
-      <el-carousel-item v-if="house.video">
+      <el-carousel-item class="video-play" v-if="house.video">
         <video :src="house.video" controls="controls"></video>
       </el-carousel-item>
       <el-carousel-item v-for="img in images" :key="img">
         <img :src="img">
       </el-carousel-item>
-      <!--<el-carousel-item>-->
-      <!--<img :src="house.image2">-->
-      <!--</el-carousel-item>-->
-      <!--<el-carousel-item>-->
-      <!--<img :src="house.image3">-->
-      <!--</el-carousel-item>-->
     </el-carousel>
     <div class="info">
       <h3 class="price">
@@ -157,10 +151,10 @@ export default {
   }
 }
 
-.el-carousel__item {
+.video-play {
   align-items: center;
   display: flex;
-  audio {
+  video {
     width: 100%;
   }
 }
