@@ -9,7 +9,7 @@
   <main class="main">
     <el-carousel :interval="3000" height="65vh">
       <el-carousel-item v-if="house.video">
-        <video :src="house.video" autoplay="autoplay" controls="controls"></video>
+        <video :src="house.video" controls="controls"></video>
       </el-carousel-item>
       <el-carousel-item v-for="img in images" :key="img">
         <img :src="img">
@@ -153,6 +153,14 @@ export default {
   width: 40%;
   img {
     height: 100%;
+    width: 100%;
+  }
+}
+
+.el-carousel__item {
+  align-items: center;
+  display: flex;
+  audio {
     width: 100%;
   }
 }
