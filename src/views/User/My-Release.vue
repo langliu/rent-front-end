@@ -2,6 +2,7 @@
 <section>
   <article v-for="house in houses" v-bind:key="house.id">
     <HouseCard :house-info="house"/>
+    <el-button type='text' @click="openMessageBox(house.id)">删除发布</el-button>
   </article>
 </section>
 </template>
@@ -61,11 +62,55 @@ export default {
           }
         })
         .catch(error => this.$message.error(error))
+    },
+    /**
+     * 删除发布内容
+     * @param {string} id 内容id
+     */
+    delRent (id) {
+      this.axios
+        .delete(`/rent/del?id=${id}&token=${sessionStorage.getItem('token')}`)
+        .then(data => {
+          if (data.data['success']) {
+            this.$message.success(data.data['message'])
+            this.getAllPostedRent()
+          } else {
+            this.$message.error(data.data['message'])
+          }
+        })
+        .catch(error => this.$message.error(error))
+    },
+    openMessageBox (id) {
+      this.$confirm('此操作将永久删除该信息, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.delRent(id)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-
+article {
+  align-items: center;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  display: flex;
+  .el-button {
+    background: #b6334a;
+    margin-right: 20px;
+    padding: 20px;
+    height: 30px;
+    line-height: 0;
+    color: white;
+  }
+}
 </style>

@@ -183,6 +183,7 @@ export default {
   mounted () {
     this.$nextTick(() => {
       this.getData()
+      this.getIPAdress()
     })
   },
   methods: {
@@ -250,6 +251,15 @@ export default {
       this.params.order = method
       this.getData()
       this.sortTitle = title
+    },
+    getIPAdress(){
+      this.axios.get('/ip/info')
+      .then(response=>{
+        if(response['success']){
+          console.log(response);
+        }
+      })
+      .catch(error => this.$message.error(error))
     }
   }
 }
