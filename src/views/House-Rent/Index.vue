@@ -12,16 +12,21 @@
     <el-row class="choose">
       <el-col :span="2" class="title">区域：</el-col>
       <el-col :span="22" class="items">
-        <span>不限</span>
-        <span>高新区</span>
-        <span>武侯区</span>
+        <span :class="{active:params.area===null}"  @click="setCounty(null)">不限</span>
+        <span class="county"
+              :class="{active:params.area===county.id}"
+              @click="setCounty(county.id)"
+              v-for="county in Counties"
+              :key="county.id">
+          {{county.name}}
+        </span>
       </el-col>
     </el-row>
     <el-row class="choose">
       <el-col :span="2" class="title">租金：</el-col>
       <el-col :span="22" class="items">
-          <span @click="setPrice(null,null)"
-                :class="{active: params.priceGt===null && params.priceLe===null}">不限</span>
+        <span @click="setPrice(null,null)"
+              :class="{active: params.priceGt===null && params.priceLe===null}">不限</span>
         <span @click="setPrice(null,500)"
               :class="{active: params.priceGt===null && params.priceLe===500}">500元以下</span>
         <span @click="setPrice(500,1000)"
@@ -45,14 +50,15 @@
     <el-row class="choose">
       <el-col :span="2" class="title">房型：</el-col>
       <el-col :span="22" class="items">
-        <span @click="setRoomNumber(null)" :class="{active:params.roomNum===null}">不限</span>
-        <span @click="setRoomNumber(1)" :class="{active:params.roomNum===1}">一室</span>
-        <span @click="setRoomNumber(2)" :class="{active:params.roomNum===2}">两室</span>
-        <span @click="setRoomNumber(3)" :class="{active:params.roomNum===3}">三室</span>
-        <span @click="setRoomNumber(4)" :class="{active:params.roomNum===4}">四室</span>
+        <span v-for="room in RoomNumber"
+              :key="room.name"
+              @click="setRoomNumber(room.num)"
+              :class="{active:params.roomNum===room.num}">
+          {{room.name}}
+        </span>
         <span>
-            <input title="roomNum" v-model="params.roomNum"/> 室
-          </span>
+          <input title="roomNum" v-model="params.roomNum"/> 室
+        </span>
       </el-col>
     </el-row>
     <el-row class="choose">
@@ -177,13 +183,43 @@ export default {
       pagination: {
         total: 0
       },
-      sortTitle: '价格从低到高'
+      sortTitle: '价格从低到高',
+      Counties: [
+        {
+          id: 0,
+          name: '',
+          parentId: 0,
+          order: 0
+        }
+      ],
+      RoomNumber: [
+        {
+          num: null,
+          name: '不限'
+        },
+        {
+          num: 1,
+          name: '一室'
+        },
+        {
+          num: 2,
+          name: '两室'
+        },
+        {
+          num: 3,
+          name: '三室'
+        },
+        {
+          num: 4,
+          name: '四室'
+        }
+      ]
     }
   },
   mounted () {
     this.$nextTick(() => {
       this.getData()
-      this.getIPAdress()
+      this.getIPAddress()
     })
   },
   methods: {
@@ -202,6 +238,14 @@ export default {
           }
         })
         .catch(error => this.$message.error(error))
+    },
+    /**
+     * 设置区域
+     * @param {number} countyId 区县id
+     **/
+    setCounty (countyId) {
+      this.params.area = countyId
+      this.getData()
     },
     /**
      * 设置搜索价格
@@ -229,9 +273,6 @@ export default {
       this.params.type = type
       this.getData()
     },
-    goToDetail (id) {
-      this.$router.push(`/index/detail/${id}`)
-    },
     handleSizeChange (value) {
       this.params.pageSize = value
       this.getData()
@@ -252,14 +293,51 @@ export default {
       this.getData()
       this.sortTitle = title
     },
-    getIPAdress(){
+    getIPAddress () {
       this.axios.get('/ip/info')
-      .then(response=>{
-        if(response['success']){
-          console.log(response);
-        }
-      })
-      .catch(error => this.$message.error(error))
+        .then(response => {
+          if (response.data['success']) {
+            const result = JSON.parse(response.data['result'])
+            if (result['result']['ip'] === '127.0.0.1') {
+              this.getCityByName('成都')
+            } else {
+              this.getCityByName(result['result']['city'])
+            }
+          }
+        })
+        .catch(error => this.$message.error(error))
+    },
+    /**
+     * 通过城市名称获取城市id
+     * @param {string} cityName 城市名称
+     **/
+    getCityByName (cityName) {
+      this.axios
+        .get(`/region/findByName/${cityName}`)
+        .then(response => {
+          if (response.data['success']) {
+            this.getCountyByCity(response.data['result']['id'])
+          } else {
+            this.$message.error(response.data['message'])
+          }
+        })
+        .catch(error => this.$message.error(error))
+    },
+    /**
+     * 通过城市Id获取区县数据
+     * @param {number} cityId 城市id
+     */
+    getCountyByCity (cityId) {
+      this.axios
+        .get(`/region/getChildren/${cityId}`)
+        .then(response => {
+          if (response.data['success']) {
+            this.Counties = response.data['result']
+          } else {
+            this.$message.error(response.data['message'])
+          }
+        })
+        .catch(error => this.$message.error(error))
     }
   }
 }
@@ -321,7 +399,7 @@ export default {
 }
 
 .choose {
-  height: 40px;
+  min-height: 40px;
   &:first-child {
     margin-top: 15px;
   }
@@ -335,6 +413,18 @@ export default {
   font-weight: 700;
   line-height: 40px;
   padding-left: 2vw;
+}
+
+.county {
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1vw;
+  line-height: 40px;
+  margin-right: 1vw;
+  &:hover {
+    color: #39ac6a;
+    text-decoration: underline;
+  }
 }
 
 .items {
